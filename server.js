@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt"); // depedency an theloume hashed password
 const cookieParser = require('cookie-parser');
 const flash = require('express-flash');
 const Joi = require('joi');
@@ -46,7 +46,7 @@ app.get('/signup.ejs', (req, res) => {
   res.render('signup')
 })
 
-
+//registration handler
 app.post("/register", async (req, res) => {
   let { email, username, password, secpassword } = req.body;
 
@@ -65,7 +65,7 @@ app.post("/register", async (req, res) => {
 
   if (password.length < 2) {
     errors.push({ message: "Password must be a least 6 characters long" });
-  }
+  } // o kwdikos thelei prosthetous periorismous pou tha prostethoun meta gia na einai eukoles oi dokimes
 
   if (password !== secpassword) {
     errors.push({ message: "Passwords do not match" });
@@ -110,7 +110,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-
+//login handler
 app.post("/users/login", async (req, res) => {
   const sql = "SELECT username FROM users WHERE username = $1 and password = $2"
   const result = await pool.query(sql,
@@ -129,7 +129,7 @@ app.post("/users/login", async (req, res) => {
 
 
 
-
+//axreiasto alla mporei na volepsei ws texnikh gia na exoume se allo fakelo ta queries kai ta functions 
 app.get('/users', db.getUsers);
 
 app.listen(port, () => {

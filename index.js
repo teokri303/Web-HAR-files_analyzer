@@ -1,57 +1,10 @@
-var usernameArray = ["teo"];
-var passwordArray = ["123"];
 
-//REGISTRATION
-function register() {
-   event.preventDefault();
 
-    var s_email = document.getElementById("semail").value;
-    var s_username = document.getElementById("suser").value;
-    var s_password = document.getElementById("spass").value;
-    var s_retypepassword = document.getElementById("srepass").value;
 
-    if (s_email ==""){
-        alert("Email required");
-        return;
-    }
-    else if (s_username == "") {
-        alert("Username required.");
-        return;
-    }
-    else if (s_password == "") {
-        alert("Password required.");
-        return;
-    }
-    else if (s_retypepassword == "") {
-        alert("Password required.");
-        return;
-    }
-    else if (s_password != s_retypepassword) {
-        alert("Password don't match retype your Password.");
-        return;
-    }
-    else if (usernameArray.indexOf(s_username) == -1) {
-        usernameArray.push(s_username);
-        passwordArray.push(s_password);
 
-        alert(s_username + "  Thanks for registration. \nTry to login Now");
+//TO KRATAME AKOMA MONO KAI MONO AUTO TO FILE 
+//GIATI PERIEXEI TOUW PERIORISMOYS TOU KODIKOU POU THA RPOSTETHOUN STON SERVER ARGOTERA
 
-        document.getElementById("suser").value = "";
-        document.getElementById("spass").value = "";
-        document.getElementById("srepass").value = "";
-        document.getElementById("semail").value = "";
-    }
-    else {
-        alert(s_username + " is already register.");
-        return;
-    }
-}
-
-//PASSWORD CHECK
-    
-/*code.addEventListener("keyup", function () {
-    checkpassword(code.value);
-});*/
 
 
 function checkpassword() {
@@ -104,45 +57,7 @@ function checkpassword() {
     }
 }
 
-//LOGIN IN
-
-
-function login() {
-    event.preventDefault();
-
-    var log_username = document.getElementById("loguser").value;
-    var log_password = document.getElementById("logpass").value;
-
-    var i = usernameArray.indexOf(log_username);
-
-    if (usernameArray.indexOf(log_username) == -1) {
-        if (log_username == "") {
-            alert("Username required.");
-            return;
-        }
-        alert("Username does not exist.");
-        return;
-    }
-    else if (passwordArray[i] != log_password) {
-        if (password == "") {
-            alert("Password required.");
-            return;
-        }
-        alert("Password does not match.");
-        return;
-    }
-    else {
-        alert(log_username + " you are login Now \n welcome to our website.");
-        window.location.href = "start.html";
-
-
-        document.getElementById("loguser").value = "";
-        document.getElementById("logpass").value = "";
-        return;
-    }
-
-}
-
+//AN THA MAS XREIASTEI NA KANOYME META KATI GIA TO FORGOT PASSWORD
 function forgot() {
     event.preventDefault();
 
