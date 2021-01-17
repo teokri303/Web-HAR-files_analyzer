@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>HAR Upload</title>
+    <meta charset="utf-8">
+    <script src="/index.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="navbar-brand">HAR ANALYZER</div>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="http://localhost:3000/login/home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://localhost:3000/home/upload">Upload-Files</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://localhost:3000/home/profile">Profile-Information</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <% if (messages.success) { %>
+        <div class="alert alert-success">
+            <%= messages.success %>
+        </div>
+        <% } %>
+
+            <h1 style="text-align: center; margin-top: 100px;">Here you can upload - filter - your local HAR Files</h1>
+
+            <div style="text-align: center" class="input-group">
+                <form action="http://localhost:8000/upload/har" method="POST">
+                <input type="file" class="form-control" id="har_file" name="har_file" accept=".json,.har"
+                    aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04"
+                    onclick="">FILTER</button>
+                <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04"
+                    onclick="return filter()">SUMBIT</button>   
+                <form action=""></form>    
+            </div>
+
+
+
+
+
+</body>
+
+<script>
+    const fileSelector = document.getElementById('har_file');
+    fileSelector.addEventListener('change', (event) => {
+        const fileList = event.target.files;
+        //console.log(fileList);
+        //console.log(fileList[0].name);
+        for (const file of fileList) {
+            console.log(file.name);
+        }
+        for (const file of fileList) {
+            readfile(file)
+        }
+    });
+    //READ FILE
+    function readfile(file) {
+        // Check if the file is an image.
+        if (file.type && file.type.indexOf('text') === -1) {
+            console.log('File is not in proper format.', file.type, file);
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.addEventListener('load', (event) => {
+            //document.getElementById('json-file').innerHTML = event.target.result;
+            //console.log(event.target.result);
+            fileContents = event.target.result;
+            //har_filter(fileContents);
+            //console.log(data);
+            //const data = JSON.parse(fileContents);
+            //console.log(data.log.entries[0]);
+            return fileContents;
+        });
+        reader.readAsText(file);
+
+    }
+</script>
+
+</html>
