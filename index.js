@@ -1,3 +1,5 @@
+const { renderFile } = require("ejs");
+
 /* PARSE & FILTER  HAR FILE */
 function har_filter(fileContents) {
     var data = JSON.parse(fileContents)
@@ -81,35 +83,32 @@ function har_filter(fileContents) {
     return (filtered);
 }
 
-har_filter(fileContents);
+//har_filter(fileContents);
 
 
 
 
 
 function filter() {
-    const har_file = har_filter(fileContents);
-    console.log(har_file);
-    
-    fetch('/upload/har', {
-        method: 'POST',
-        body: har_file
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.path)
-    })
-    .catch(error => {
-        console.error(error)
-    })
-    
+    const submited_file = har_filter(fileContents);
+    console.log(submited_file);
     //main();
+    //window.location.replace("http://localhost:3000/home/upload/choice");
     return false;
 }
 
+function submit_har() {
+
+    const button = document.getElementById("submit");
+    submit.addEventListener('onclick', (event) =>{
+        console.log(submited_file);
+    })
+
+}
 
 
-
+module.exports = {har_filter}
+  
 
 
 
@@ -167,22 +166,5 @@ function checkpassword() {
     }
 }
 
-//AN THA MAS XREIASTEI NA KANOYME META KATI GIA TO FORGOT PASSWORD
-function forgot() {
-    event.preventDefault();
 
-    var email = document.getElementById("fe").value;
-
-    if (emailArray.indexOf(email) == -1) {
-        if (email == "") {
-            alert("Email required.");
-            return;
-        }
-        alert("Email does not exist.");
-        return;
-    }
-
-    alert("email is send to your email check it in 24hr. \n Thanks");
-    document.getElementById("fe").value = "";
-}
 

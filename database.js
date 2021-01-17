@@ -18,9 +18,7 @@ const getUsers = (request, response) => {
     })
   }
 
-  const postUser = (request, response) => {
-    
-  }
+
 
   
 
