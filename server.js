@@ -6,12 +6,13 @@ const cookieParser = require('cookie-parser');
 const flash = require('express-flash');
 const Joi = require('joi');
 const validator = require('express-joi-validation').createValidator({});
+const fileUpload = require('express-fileupload');
 const app = express();
 const port = 3000;
 const db = require('./database');
 const { pool } = require('./database');
 
-
+app.use(fileUpload());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('static')); //gia prospelash tou css
@@ -23,14 +24,15 @@ app.set('view engine', 'ejs');
 app.use(cookieParser('keyboard cat'));
 app.use(session({
   secret: 'secret',
-  cookie: { maxAge: 60000 },
+  cookie: { maxAge: 1000000 },
   resave: false,
   saveUninitialized: false
 }));
 app.use(flash());
 
+
 //flash message middleware
-app.use((req, res, next)=>{
+app.use((req, res, next) => {
   res.locals.message = req.session.message
   delete req.session.message
   next()
@@ -44,7 +46,21 @@ app.get('/', (req, res) => {
 });
 app.get('/signup.ejs', (req, res) => {
   res.render('signup')
-})
+});
+app.get('/login.ejs', (req, res) => {
+  res.render('login')
+});
+app.get('/login/home', (req, res) => {
+  res.render('home');
+});
+app.get('/home/upload', (req, res) => {
+  res.render('upload');
+});
+app.get('/home/profile', (req, res) => {
+  res.render('profile', { name: req.session.username, password: req.session.password });
+});
+
+
 
 //registration handler
 app.post("/register", async (req, res) => {
@@ -88,7 +104,7 @@ app.post("/register", async (req, res) => {
         if (results.rows.length > 0) {
           req.flash('error', 'Email already in use');
           return res.render('signup');
-          
+
         } else {
           pool.query(
             `INSERT INTO users (username, password, email)
@@ -111,21 +127,91 @@ app.post("/register", async (req, res) => {
 });
 
 //login handler
-app.post("/users/login", async (req, res) => {
+app.post("/login/home", async (req, res) => {
+  let { username, password } = req.body;
+
   const sql = "SELECT username FROM users WHERE username = $1 and password = $2"
   const result = await pool.query(sql,
     [req.body.username, req.body.password]);
 
+
+  if (username == "admin" && password == "adminadmin") {
+    res.render('admin')
+  }
   //fail
-  if (result.rowCount === 0){
+  if (result.rowCount === 0) {
     req.flash('error', 'Your username or password is wrong. ')
     res.redirect('/');
-  }  
-  else{
+  }
+  else {
     req.flash('success', 'You are now logged in. ')
-    res.render('start');
-  }  
+    req.session.username = req.body.username;
+    req.session.password = req.body.password;
+    res.render('home');
+  }
 });
+
+app.post("/home/profile", async (req, res) => {
+  let { newusername, newpassword, secpassword } = req.body;
+
+  let errors = [];
+
+  console.log({
+    newusername,
+    newpassword,
+    secpassword
+  });
+
+  if (!newusername || !newpassword || !secpassword) {
+    errors.push({ message: "Please enter all fields" });
+  }
+
+  if (newpassword.length < 2) {
+    errors.push({ message: "Password must be a least 6 characters long" });
+  } // o kwdikos thelei prosthetous periorismous pou tha prostethoun meta gia na einai eukoles oi dokimes
+
+  if (newpassword !== secpassword) {
+    errors.push({ message: "Passwords do not match" });
+  }
+
+  if (errors.length > 0) {
+    res.render("profile", { name: req.session.username, password: req.session.password , errors, newusername, newpassword, secpassword });
+  } else {
+    // Validation passed
+    pool.query(
+      `UPDATE users SET username = $1, password = $2
+          WHERE username = $3 AND password = $4`,
+      [newusername, newpassword, req.session.username, req.session.password],
+      (err, results) => {
+        if (err) {
+          console.log(err);
+        }
+        else {
+          console.log(results.rows);
+          req.flash("success", "Your information changed succesfully");
+          res.render('profile', { name: newusername, password: newpassword});
+        }
+      }
+    );
+  }
+});
+
+
+app.post("/upload/har", async (req,res) =>{
+  console.log("DONE")
+  try {
+    let har = req.files.har_file;
+  }
+  catch (error) {
+    console.log(error)
+  }
+
+  console.log(har)
+
+
+})
+
+
 
 
 
