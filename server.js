@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const bcrypt = require("bcrypt"); // depedency an theloume hashed password
 const cookieParser = require('cookie-parser');
 const flash = require('express-flash');
 const Joi = require('joi');
@@ -11,6 +10,8 @@ const app = express();
 const port = 3000;
 const db = require('./database');
 const { pool } = require('./database');
+const index = require('./index')
+
 
 app.use(fileUpload());
 app.use(bodyParser.json());
@@ -55,6 +56,9 @@ app.get('/login/home', (req, res) => {
 });
 app.get('/home/upload', (req, res) => {
   res.render('upload');
+});
+app.get('/home/upload/choice', (req, res) => {
+  res.render('uploadSEC');
 });
 app.get('/home/profile', (req, res) => {
   res.render('profile', { name: req.session.username, password: req.session.password });
@@ -151,6 +155,7 @@ app.post("/login/home", async (req, res) => {
   }
 });
 
+//change user information handler
 app.post("/home/profile", async (req, res) => {
   let { newusername, newpassword, secpassword } = req.body;
 
@@ -175,7 +180,7 @@ app.post("/home/profile", async (req, res) => {
   }
 
   if (errors.length > 0) {
-    res.render("profile", { name: req.session.username, password: req.session.password , errors, newusername, newpassword, secpassword });
+    res.render("profile", { name: req.session.username, password: req.session.password, errors, newusername, newpassword, secpassword });
   } else {
     // Validation passed
     pool.query(
@@ -189,24 +194,38 @@ app.post("/home/profile", async (req, res) => {
         else {
           console.log(results.rows);
           req.flash("success", "Your information changed succesfully");
-          res.render('profile', { name: newusername, password: newpassword});
+          res.render('profile', { name: newusername, password: newpassword });
         }
       }
     );
   }
 });
 
-
-app.post("/upload/har", async (req,res) =>{
+//ARXIKO POST HANDLER GIA TO FILE
+/*app.post("/upload/har", async (req,res) =>{
   console.log("DONE")
   try {
-    let har = req.files.har_file;
+    let har = req.file.submited_file;
   }
   catch (error) {
     console.log(error)
   }
 
   console.log(har)
+
+
+})*/
+app.post("/upload/har", async (req, res) => {
+  console.log("POST REQUEST CAME")
+
+const submited_file = req.files.sumbited_file.data;
+//const parsed = JSON.parse(submited_file.data)
+//let filtered = index.har_filter(req.files.sumbited_file)
+const filtered_data = index.har_filter(submited_file)
+data = JSON.parse(filtered_data)
+console.log('NAME OF FILE = ' + req.files.sumbited_file.name)
+console.log(data.log.entries[0].serverIPAddress)
+
 
 
 })
