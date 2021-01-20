@@ -10,7 +10,8 @@ const app = express();
 const port = 3000;
 const db = require('./database');
 const { pool } = require('./database');
-const index = require('./index')
+const index = require('./index');
+const { string } = require('joi');
 
 
 app.use(fileUpload());
@@ -62,6 +63,50 @@ app.get('/home/upload/choice', (req, res) => {
 });
 app.get('/home/profile', (req, res) => {
   res.render('profile', { name: req.session.username, password: req.session.password });
+});
+app.get('/login/admin', async (req, res) => {
+//USERS
+  pool.query("SELECT * FROM users", function (err, user_info) {
+    if (err)
+      throw err;
+    else {
+
+      users = user_info;
+    }
+  });
+  //REGISTERED USERS
+  pool.query("SELECT COUNT(*) FROM users", function (err, count) {
+    if (err)
+      throw err;
+    else {
+      users_number = count.rows[0].count;
+    }
+  });
+  //RESPONSE STATUS COUNT
+  pool.query("SELECT status, COUNT(*) FROM response GROUP BY status", function (err, status_count) {
+    if (err)
+      throw err;
+    else {
+      responseStatus = status_count.rows;
+      //console.log(parseInt(responseStatus[0].status))
+      //console.log(responseStatus)
+    }
+  });
+  //METHODS STATUS COUNT
+  pool.query("SELECT method, COUNT(*) FROM request GROUP BY method", function (err, get_method) {
+    if (err)
+      throw err;
+    else {
+      methods = get_method.rows;
+      //console.log(methods)
+      
+      res.render('admin', { users, users_number, methods, responseStatus });
+      res.end();
+    }
+  });
+  
+
+
 });
 
 
@@ -140,7 +185,8 @@ app.post("/login/home", async (req, res) => {
 
 
   if (username == "admin" && password == "adminadmin") {
-    res.render('admin')
+    res.redirect('/login/admin')
+
   }
   //fail
   if (result.rowCount === 0) {
@@ -201,35 +247,79 @@ app.post("/home/profile", async (req, res) => {
   }
 });
 
-//ARXIKO POST HANDLER GIA TO FILE
-/*app.post("/upload/har", async (req,res) =>{
-  console.log("DONE")
-  try {
-    let har = req.file.submited_file;
-  }
-  catch (error) {
-    console.log(error)
-  }
-
-  console.log(har)
-
-
-})*/
+//upload har and store in database handler
 app.post("/upload/har", async (req, res) => {
   console.log("POST REQUEST CAME")
 
-const submited_file = req.files.sumbited_file.data;
-//const parsed = JSON.parse(submited_file.data)
-//let filtered = index.har_filter(req.files.sumbited_file)
-const filtered_data = index.har_filter(submited_file)
-data = JSON.parse(filtered_data)
-console.log('NAME OF FILE = ' + req.files.sumbited_file.name)
-console.log(data.log.entries[0].serverIPAddress)
+  const submited_file = req.files.sumbited_file.data;
+  //const parsed = JSON.parse(submited_file.data)
+  //let filtered = index.har_filter(req.files.sumbited_file)
+  const filtered_data = index.har_filter(submited_file)
+  data = JSON.parse(filtered_data)
+  console.log('NAME OF FILE = ' + req.files.sumbited_file.name)
+  console.log(data.log.entries[0])
 
+
+
+  for (var i = 0; i < data.log.entries.length; i++) {
+    pool.query(`INSERT INTO entries (starteddatetime, serveripaddress, timings) VALUES ($1, $2, $3)`,
+      [data.log.entries[i].startedDateTime, data.log.entries[i].serverIPAddress, data.log.entries[i].timings.wait],
+      (err, results) => {
+        if (err) {
+          throw err;
+        }
+      })
+
+    pool.query(`INSERT INTO request (method, url) VALUES ($1, $2)`,
+      [data.log.entries[i].request.method, data.log.entries[i].request.url],
+      (err, results) => {
+        if (err) {
+          throw err;
+        }
+      })
+    pool.query(`INSERT INTO response (status, statustext) VALUES ($1, $2)`,
+      [data.log.entries[i].response.status, data.log.entries[i].response.statusText],
+      (err, results) => {
+        if (err) {
+          throw err;
+        }
+      })
+    pool.query(`INSERT INTO headers (content_type, cache_control, pragma, last_modified, host, age, expires) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [data.log.entries[i].response.headers.content_type,
+      data.log.entries[i].response.headers.cache_control,
+      data.log.entries[i].response.headers.pragma,
+      data.log.entries[i].response.headers.last_modified,
+      data.log.entries[i].response.headers.host,
+      data.log.entries[i].response.headers.age,
+      data.log.entries[i].response.headers.expires,
+      ],
+      (err, results) => {
+        if (err) {
+          throw err;
+        }
+      })
+
+    pool.query(`INSERT INTO headers (content_type, cache_control, pragma, last_modified, host, age, expires) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [data.log.entries[i].request.headers.content_type,
+      data.log.entries[i].request.headers.cache_control,
+      data.log.entries[i].request.headers.pragma,
+      data.log.entries[i].request.headers.last_modified,
+      data.log.entries[i].request.headers.host,
+      data.log.entries[i].request.headers.age,
+      data.log.entries[i].request.headers.expires
+      ],
+      (err, results) => {
+        if (err) {
+          throw err;
+        }
+      })
+
+  }
+
+  console.log("SAAAAAVEEEEDDDD")
 
 
 })
-
 
 
 
