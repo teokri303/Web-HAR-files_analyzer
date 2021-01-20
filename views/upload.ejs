@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
@@ -40,15 +39,31 @@
 
             <h1 style="text-align: center; margin-top: 100px;">Here you can upload - filter - your local HAR Files</h1>
 
+            <div style="text-align: center" class="input-group">
+                <form action="" method="POST">
+                    <input type="file" class="form-control" id="har_file" name="har_file" accept=".json,.har"
+                        aria-describedby="inputGroupFileAddon04" aria-label="Upload">
 
-            <form method="POST" action="/upload/har" enctype="multipart/form-data">
-                <input class="btn btn-outline-secondary" type="file" id="har_file" name="sumbited_file" onclick="" >
-                <input class="btn btn-outline-secondary" type="button" onclick="return filter()" value="FILTER">
-                <input class="btn btn-outline-secondary" type="SUBMIT" value="SUBMIT">
-                <input class="btn btn-outline-secondary" type="button"  value="SAVE LOCAL">
-            </form>
+            </div>
 
-    
+            <div class="div_submit">
+
+                <button class="btn btn-outline-secondary" style="text-align: center; margin-top: 100px;" type="submit"
+                    id="inputGroupFileAddon04" onclick="return filter()">FILTER</button>
+
+
+                <!-- <form method="POST" action="/upload/har" enctype="multipart/form-data"></form> 
+                    <input type="file" class="form-control" id="har_file" name="har_file" accept=".json,.har"
+                    aria-describedby="inputGroupFileAddon04" aria-label="Upload"> -->
+                <button class="btn btn-outline-secondary" style="text-align: center; margin-top: 100px;" type="submit"
+                    id="submit_har">SUMBIT</button>
+
+            </div>
+
+            <h1 style="text-align: center; margin-top: 100px;">HAR Preview</h1>
+            <div style="text-align: center" class="input-group">
+                <p id="har_Preview"></p>>
+            </div>
 
 
 
@@ -89,6 +104,87 @@
         });
         reader.readAsText(file);
 
+    }
+
+
+    const har_submit = document.getElementById('submit_har');
+    har_submit.addEventListener('click', (event) => {
+        submit_file();
+        //console.log(window.har_file);
+        event.preventDefault();
+    });
+
+    const filePreview = document.getElementById('har_Preview');
+    //window.user_data =  await main();
+    //console.log(window.user_data);
+
+    /*
+    //PREVIEW
+    har_submit.addEventListener('change', (event) => {
+        //filePreview.innerHTML = window.har_file;
+        console.log(window.har_file);
+    });
+    return false;
+    */
+    // SUBMIT HAR FILE    
+    async function submit_file() {
+        //USER DATA FOR 
+        let user_data = await UserData();
+        console.log(user_data);
+        let har_file = JSON.parse(window.har_file);
+        har_file.log.user_data = new Object();
+        har_file.log.user_data.latitude = user_data.latitude;
+        har_file.log.user_data.longitude = user_data.longitude;
+        har_file.log.user_data.organization_name = user_data.organization_name;
+
+        console.log(har_file.user_data);
+        console.log(har_file);
+        let response = await fetch('/upload/har', {
+            method: "POST",
+            body: JSON.stringify(har_file),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }
+        );
+        let response_json = await response.json();
+        let myJson = await myJson();
+    }
+
+    async function UserData() {
+        IPAddress = await GetUserIp();
+        console.log(IPAddress);
+        const Url = `https://get.geojs.io/v1/ip/geo/${IPAddress}.json`;
+        return fetch(Url)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.country_code);
+                return data;
+            })
+            .catch(error => console.log(error));
+    }
+    /* GET USER IP */
+    function GetUserIp() {
+        const Url = "https://api.ipify.org?format=json";
+        return fetch(Url)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.ip);
+                return data.ip;
+            })
+            .catch(error => console.log(error));
+    }
+
+    function main() {
+
+        (async () => {
+            data = await UserData();
+            //user_city = data.city
+            // all of the script.... 
+            console.log(data)
+
+        })();
+        return data;
     }
 </script>
 

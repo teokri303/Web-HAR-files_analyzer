@@ -10,9 +10,9 @@ const app = express();
 const port = 3000;
 const db = require('./database');
 const { pool } = require('./database');
-const index = require('./index');
 const { string } = require('joi');
-
+const  {IPData} = require('./ip_data.js');
+const fetch = require('node-fetch');
 
 app.use(fileUpload());
 app.use(bodyParser.json());
@@ -249,18 +249,23 @@ app.post("/home/profile", async (req, res) => {
 
 //upload har and store in database handler
 app.post("/upload/har", async (req, res) => {
-  console.log("POST REQUEST CAME")
+  console.log("POST REQUEST CAME");
+  (console.log(req.body));
+  const data = req.body;
+  for (let i=0; i < (req.body.log.entries).length; i++){
 
-  const submited_file = req.files.sumbited_file.data;
-  //const parsed = JSON.parse(submited_file.data)
-  //let filtered = index.har_filter(req.files.sumbited_file)
-  const filtered_data = index.har_filter(submited_file)
-  data = JSON.parse(filtered_data)
-  console.log('NAME OF FILE = ' + req.files.sumbited_file.name)
-  console.log(data.log.entries[0])
-
-
-
+    var ip = req.body.log.entries[i].serverIPAddress;
+    if(ip.length > 3) {
+      if((ip.indexOf('[')) !=-1 ){
+         ip = ip.substring(ip.indexOf('[') + 1, ip.indexOf(']')); 
+      }
+      server_data = await IPData(ip);
+      req.body.log.entries[i].server_lat = server_data.latitude;
+      req.body.log.entries[i].server_long = server_data.longitude;
+    
+    }
+  }
+/*
   for (var i = 0; i < data.log.entries.length; i++) {
     pool.query(`INSERT INTO entries (starteddatetime, serveripaddress, timings) VALUES ($1, $2, $3)`,
       [data.log.entries[i].startedDateTime, data.log.entries[i].serverIPAddress, data.log.entries[i].timings.wait],
@@ -315,7 +320,7 @@ app.post("/upload/har", async (req, res) => {
       })
 
   }
-
+  */
   console.log("SAAAAAVEEEEDDDD")
 
 

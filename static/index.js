@@ -1,6 +1,3 @@
-const { renderFile } = require("ejs");
-
-/* PARSE & FILTER  HAR FILE */
 function har_filter(fileContents) {
     var data = JSON.parse(fileContents)
     var entries_length = (data.log.entries).length;
@@ -90,27 +87,31 @@ function har_filter(fileContents) {
 
 
 function filter() {
-    const submited_file = har_filter(fileContents);
-    console.log(submited_file);
-    //main();
-    //window.location.replace("http://localhost:3000/home/upload/choice");
+    window.har_file = har_filter(fileContents);
+    //console.log(window.har_file);
+
+    /*
+    fetch('/upload/har', {
+        method: 'POST',
+        body: har_file
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.path)
+    })
+    .catch(error => {
+        console.error(error)
+    })
+    */
+    //window.user_data = main();
     return false;
 }
 
-function submit_har() {
-
-    const button = document.getElementById("submit");
-    submit.addEventListener('onclick', (event) =>{
-        console.log(submited_file);
-    })
-
-}
 
 
-module.exports = {har_filter}
-  
 
-
+//module.exports = {filter}
+//exports.filter = filter;
 
 
 //TO KRATAME AKOMA MONO KAI MONO AUTO TO FILE 
@@ -168,3 +169,21 @@ function checkpassword() {
 
 
 
+//AN THA MAS XREIASTEI NA KANOYME META KATI GIA TO FORGOT PASSWORD
+function forgot() {
+    event.preventDefault();
+
+    var email = document.getElementById("fe").value;
+
+    if (emailArray.indexOf(email) == -1) {
+        if (email == "") {
+            alert("Email required.");
+            return;
+        }
+        alert("Email does not exist.");
+        return;
+    }
+
+    alert("email is send to your email check it in 24hr. \n Thanks");
+    document.getElementById("fe").value = "";
+}
