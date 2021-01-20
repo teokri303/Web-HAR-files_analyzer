@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <html>
+
 <head>
     <title>Admin Page</title>
     <meta charset="utf-8">
@@ -8,16 +9,122 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <script type="text/javascript" src="server.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
     <% if (messages.success) { %>
-        <div class="alert alert-success"><%= messages.success %> </div>
-    <% } %>
+        <div class="alert alert-success">
+            <%= messages.success %>
+        </div>
+        <% } %>
+
+            <h1 style="text-align: center; margin: 50px;">This is the admin page analytics</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">USERNAME</th>
+                        <th scope="col">PASSWORD</th>
+                        <th scope="col">EMAIL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(var i=0; i < users.rows.length; i++) { %>
+                        <tr>
+                            <td>
+                                <%= users.rows[i].user_ID %>
+                            </td>
+                            <td>
+                                <%= users.rows[i].username %>
+                            </td>
+                            <td>
+                                <%= users.rows[i].password %>
+                            </td>
+                            <td>
+                                <%= users.rows[i].email %>
+                            </td>
+                        </tr>
+                        <% } %>
+                </tbody>
+            </table>
+
+
+            <h3 style="text-align: center; margin-top: 30px;">Amount of registered users</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">USERS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                            <td>
+                                <%= users_number%>
+                            </td>
     
-    <h1 style="text-align: center; margin-top: 100px;">This is the admin page</h1>
+                </tbody>
+            </table>
+
+            <h3 style="text-align: center; margin-top: 30px;">Amount of request methods</h3>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <% for(var i=0; i < methods.length; i++) { %>
+                            <th scope="col"><%= methods[i].method %></th>
+                        <% } %>  
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                            <% for(var i=0; i < methods.length; i++) { %>
+                            <td>
+                                <%= methods[i].count %>
+                            </td>
+                            <% } %>  
+                        </tr>
+        
+                </tbody>
+            </table>
+
+
+            <h3 style="text-align: center; margin-top: 30px;">Response status count</h3>
+            <table class="table">
+                <thead>
+                    
+                        <tr>
+                            <% for(var i=0; i < responseStatus.length; i++) { %>
+                                <th scope="col"><%= responseStatus[i].status %></th>
+                            <% } %>  
+                        </tr>
+                   
+                </thead>
+                <tbody>
+                    <tbody>
+                        
+                            <tr>
+                                <% for(var i=0; i < responseStatus.length; i++) { %>
+                                <td>  
+                                    <%= responseStatus[i].count %>                               
+                                </td>
+                                <% } %>
+                            </tr>
+                            
+                    </tbody>
+              
+                </tbody>
+            </table>
+
+
+      
+
+    
+ 
+
+
 
 
 </body>
+
 </html>
