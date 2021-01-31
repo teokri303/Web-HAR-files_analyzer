@@ -53,17 +53,16 @@ app.get('/login.ejs', (req, res) => {
   res.render('login')
 });
 app.get('/login/home', (req, res) => {
-  res.render('home');
+    res.render('home');
 });
 app.get('/home/upload', (req, res) => {
   res.render('upload');
 });
-app.get('/home/upload/choice', (req, res) => {
-  res.render('uploadSEC');
-});
 app.get('/home/profile', (req, res) => {
   res.render('profile', { name: req.session.username, password: req.session.password });
 });
+
+//ADMIN PAGE ANALYTICS 
 app.get('/login/admin', async (req, res) => {
 //USERS
   pool.query("SELECT * FROM users", function (err, user_info) {
@@ -108,7 +107,6 @@ app.get('/login/admin', async (req, res) => {
 
 
 });
-
 
 
 //registration handler
@@ -250,8 +248,9 @@ app.post("/home/profile", async (req, res) => {
 //upload har and store in database handler
 app.post("/upload/har", async (req, res) => {
   console.log("POST REQUEST CAME");
-  (console.log(req.body));
+  //console.log(req.body);
   const data = req.body;
+  var currentdate = new Date();
   for (let i=0; i < (req.body.log.entries).length; i++){
 
     var ip = req.body.log.entries[i].serverIPAddress;
@@ -265,31 +264,52 @@ app.post("/upload/har", async (req, res) => {
     
     }
   }
-/*
-  for (var i = 0; i < data.log.entries.length; i++) {
-    pool.query(`INSERT INTO entries (starteddatetime, serveripaddress, timings) VALUES ($1, $2, $3)`,
-      [data.log.entries[i].startedDateTime, data.log.entries[i].serverIPAddress, data.log.entries[i].timings.wait],
+  console.log(data.log.entries[0].server_lat)
+  
+  //last-update in table users insert when you upload har
+  pool.query(`UPDATE users SET lastupload = $1 WHERE username = $2`,
+  [currentdate, req.session.username],
+  (err, results) => {
+    if (err) {
+      throw err;
+    }
+  })
+    
+  //inserting values into Har-Files
+  pool.query(`INSERT INTO har_files (host, geolat, geolong, user_id) VALUES ($1, $2, $3, (SELECT user_id FROM users WHERE username = $4))`,
+  [data.log.user_data.organization_name, data.log.user_data.latitude, data.log.user_data.longitude, req.session.username],
+  (err, results) => {
+    if (err) {
+      throw err;
+    }
+  })
+
+
+  
+  for (var i = 0; i < data.log.entries.length; i++){
+    pool.query(`INSERT INTO entries (starteddatetime, serveripaddress, timings, serverlat, serverlong, har_id) VALUES ($1, $2, $3, $4, $5, (SELECT MAX(har_id) FROM har_files))`,
+      [data.log.entries[i].startedDateTime, data.log.entries[i].serverIPAddress, data.log.entries[i].timings.wait, data.log.entries[i].server_lat, data.log.entries[i].server_long],
       (err, results) => {
         if (err) {
           throw err;
         }
       })
 
-    pool.query(`INSERT INTO request (method, url) VALUES ($1, $2)`,
+    pool.query(`INSERT INTO request (method, url, en_id) VALUES ($1, $2, (SELECT MAX(entries_id) FROM entries))`,
       [data.log.entries[i].request.method, data.log.entries[i].request.url],
       (err, results) => {
         if (err) {
           throw err;
         }
       })
-    pool.query(`INSERT INTO response (status, statustext) VALUES ($1, $2)`,
+    pool.query(`INSERT INTO response (status, statustext, en_id) VALUES ($1, $2, (SELECT MAX(entries_id) FROM entries))`,
       [data.log.entries[i].response.status, data.log.entries[i].response.statusText],
       (err, results) => {
         if (err) {
           throw err;
         }
       })
-    pool.query(`INSERT INTO headers (content_type, cache_control, pragma, last_modified, host, age, expires) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+    pool.query(`INSERT INTO headers (content_type, cache_control, pragma, last_modified, host, age, expires, en_id) VALUES ($1, $2, $3, $4, $5, $6, $7, (SELECT MAX(entries_id) FROM entries))`,
       [data.log.entries[i].response.headers.content_type,
       data.log.entries[i].response.headers.cache_control,
       data.log.entries[i].response.headers.pragma,
@@ -320,11 +340,33 @@ app.post("/upload/har", async (req, res) => {
       })
 
   }
-  */
+  
   console.log("SAAAAAVEEEEDDDD")
 
 
 })
+
+
+
+//TEST GIA TRAVIGMA LAT LONG APO ENTRIES
+
+app.get("/test", (req, res) =>{
+  pool.query(`SELECT username FROM users`, (err,results,fields) =>{
+    if(err) throw err;
+    console.log(results.rows);
+    res.send(results.rows)
+  })
+})
+app.get("/geo", (req, res) =>{
+  pool.query(`SELECT serverlat, serverlong FROM entries`, (err,results,fields) =>{
+    if(err) throw err;
+    console.log(results.rows);
+    res.send(results.rows)
+  })
+})
+
+
+
 
 
 
