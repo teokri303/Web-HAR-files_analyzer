@@ -265,7 +265,7 @@ app.post("/upload/har", async (req, res) => {
     
     }
   }
-/*
+
   for (var i = 0; i < data.log.entries.length; i++) {
     pool.query(`INSERT INTO entries (starteddatetime, serveripaddress, timings) VALUES ($1, $2, $3)`,
       [data.log.entries[i].startedDateTime, data.log.entries[i].serverIPAddress, data.log.entries[i].timings.wait],
@@ -320,7 +320,7 @@ app.post("/upload/har", async (req, res) => {
       })
 
   }
-  */
+  
   console.log("SAAAAAVEEEEDDDD")
 
 

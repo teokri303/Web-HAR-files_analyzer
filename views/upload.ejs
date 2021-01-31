@@ -51,15 +51,15 @@
                 <button class="btn btn-outline-secondary" style="text-align: center; margin-top: 100px;" type="submit"
                     id="inputGroupFileAddon04" onclick="return filter()">FILTER</button>
 
-
-                <!-- <form method="POST" action="/upload/har" enctype="multipart/form-data"></form> 
-                    <input type="file" class="form-control" id="har_file" name="har_file" accept=".json,.har"
-                    aria-describedby="inputGroupFileAddon04" aria-label="Upload"> -->
                 <button class="btn btn-outline-secondary" style="text-align: center; margin-top: 100px;" type="submit"
                     id="submit_har">SUMBIT</button>
+            </div> 
+            <div class="local_download">     
+                <button class="btn btn-outline-secondary" style="text-align: center; margin-top: 100px;" type="submit"
+                    id="save_local_button">Save local</button>
 
             </div>
-
+            <div class="div_buttons" id="div_buttons"></div>
             <h1 style="text-align: center; margin-top: 100px;">HAR Preview</h1>
             <div style="text-align: center" class="input-group">
                 <p id="har_Preview"></p>>
@@ -110,14 +110,15 @@
     const har_submit = document.getElementById('submit_har');
     har_submit.addEventListener('click', (event) => {
         submit_file();
+        var btn = document.createElement("BUTTON");
+        btn.innerHTML = "CLICK ME";                   
+        //document.body
+        document.getElementById('div_buttons').appendChild(btn);
         //console.log(window.har_file);
         event.preventDefault();
     });
 
-    const filePreview = document.getElementById('har_Preview');
-    //window.user_data =  await main();
-    //console.log(window.user_data);
-
+    //const filePreview = document.getElementById('har_Preview');
     /*
     //PREVIEW
     har_submit.addEventListener('change', (event) => {
@@ -149,6 +150,24 @@
         );
         let response_json = await response.json();
         let myJson = await myJson();
+    }
+
+    //save local
+    const save_local_btn = document.getElementById('save_local_button');
+    save_local_btn.addEventListener('click', (event) => {
+        download_har();
+        event.preventDefault();
+    });
+    
+    function download_har(){
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([window.har_file], {
+        type: "text/plain"
+        }));
+        a.setAttribute("download", "data.txt");
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a); 
     }
 
     async function UserData() {
