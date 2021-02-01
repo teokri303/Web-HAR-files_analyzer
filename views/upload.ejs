@@ -48,14 +48,14 @@
 
             <div class="div_submit">
 
-                <button class="btn btn-outline-secondary" style="text-align: center; margin-top: 100px;" type="submit"
-                    id="inputGroupFileAddon04" onclick="return filter()">FILTER</button>
+                <button class="btn btn-outline-secondary" style="text-align: center; margin-top: 100px; " type="submit"
+                    id="filter_btn">FILTER</button>
 
-                <button class="btn btn-outline-secondary" style="text-align: center; margin-top: 100px;" type="submit"
+                <button class="btn btn-outline-secondary" style="text-align: center; margin-top: 100px; display: none;" type="submit"
                     id="submit_har">SUMBIT</button>
             </div> 
             <div class="local_download">     
-                <button class="btn btn-outline-secondary" style="text-align: center; margin-top: 100px;" type="submit"
+                <button class="btn btn-outline-secondary" style="text-align: center; margin-top: 100px; display: none;" type="submit"
                     id="save_local_button">Save local</button>
 
             </div>
@@ -98,6 +98,16 @@
 
     }
 
+
+    const har_filter_btn = document.getElementById('filter_btn');
+    har_filter_btn.addEventListener('click', (event) => {
+        filter();
+        const har_submit = document.getElementById('submit_har');
+        const save_local_btn = document.getElementById('save_local_button');
+        har_submit.style.display = "block";
+        save_local_btn.style.display = "block";
+        event.preventDefault();
+    });
 
     const har_submit = document.getElementById('submit_har');
     har_submit.addEventListener('click', (event) => {
