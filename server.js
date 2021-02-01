@@ -264,7 +264,7 @@ app.post("/upload/har", async (req, res) => {
     
     }
   }
-<<<<<<< HEAD
+
   console.log(data.log.entries[0].server_lat)
   
   //last-update in table users insert when you upload har
