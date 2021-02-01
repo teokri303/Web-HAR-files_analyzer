@@ -12,8 +12,6 @@ function IPData(IPAddress){
 
     })
     .catch(error=>console.log(error))
-    
-
 }
 
 

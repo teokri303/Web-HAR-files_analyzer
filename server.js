@@ -248,16 +248,16 @@ app.post("/home/profile", async (req, res) => {
 //upload har and store in database handler
 app.post("/upload/har", async (req, res) => {
   console.log("POST REQUEST CAME");
-  //console.log(req.body);
   const data = req.body;
   var currentdate = new Date();
   for (let i=0; i < (req.body.log.entries).length; i++){
-
     var ip = req.body.log.entries[i].serverIPAddress;
+    // check for IPv6 value inside brackets 
     if(ip.length > 3) {
       if((ip.indexOf('[')) !=-1 ){
          ip = ip.substring(ip.indexOf('[') + 1, ip.indexOf(']')); 
       }
+      // get lat & long for server ip address
       server_data = await IPData(ip);
       req.body.log.entries[i].server_lat = server_data.latitude;
       req.body.log.entries[i].server_long = server_data.longitude;
@@ -265,7 +265,6 @@ app.post("/upload/har", async (req, res) => {
     }
   }
 
-  console.log(data.log.entries[0].server_lat)
   
   //last-update in table users insert when you upload har
   pool.query(`UPDATE users SET lastupload = $1 WHERE username = $2`,

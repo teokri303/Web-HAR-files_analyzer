@@ -74,8 +74,6 @@
     const fileSelector = document.getElementById('har_file');
     fileSelector.addEventListener('change', (event) => {
         const fileList = event.target.files;
-        //console.log(fileList);
-        //console.log(fileList[0].name);
         for (const file of fileList) {
             console.log(file.name);
         }
@@ -93,13 +91,7 @@
 
         const reader = new FileReader();
         reader.addEventListener('load', (event) => {
-            //document.getElementById('json-file').innerHTML = event.target.result;
-            //console.log(event.target.result);
             fileContents = event.target.result;
-            //har_filter(fileContents);
-            //console.log(data);
-            //const data = JSON.parse(fileContents);
-            //console.log(data.log.entries[0]);
             return fileContents;
         });
         reader.readAsText(file);
@@ -192,18 +184,6 @@
                 return data.ip;
             })
             .catch(error => console.log(error));
-    }
-
-    function main() {
-
-        (async () => {
-            data = await UserData();
-            //user_city = data.city
-            // all of the script.... 
-            console.log(data)
-
-        })();
-        return data;
     }
 </script>
 

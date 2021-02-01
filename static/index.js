@@ -80,11 +80,6 @@ function har_filter(fileContents) {
     return (filtered);
 }
 
-//har_filter(fileContents);
-
-
-
-
 
 function filter() {
     window.har_file = har_filter(fileContents);
