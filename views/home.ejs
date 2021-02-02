@@ -13,8 +13,11 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin=""></script>
+
+
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
         <script src="/ajax_requests.js"></script>
+        <script src="/leaflet-heat.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -39,56 +42,30 @@
         </div>
     </nav>
 
-    <% if (messages.success) { %>
-        <div class="alert alert-success">
-            <%= messages.success %>
-        </div>
-        <% } %>
+<% if (messages.success) { %>
+    <div class="alert alert-success">
+        <%= messages.success %>
+     </div>
+<% } %>
 
-            <h1 style="text-align: center; margin-top: 100px;">welcome to your analysis</h1>
+ <h1 style="text-align: center; margin-top: 40px; margin-bottom: 30px;">welcome to your analysis</h1>
+ <p style="text-align: center;">Location of IP's you send HTTP requests</p>
 
 
-            <div id="mapid" style="height: 500px; width:auto;"></div>
-            <br>
-            
-             <button id="test" type="button"> press for test</button>
+    <div id="mapid" style="height: 670px; width:auto;"></div>
+    <br>
+      
+    <button id="test" type="button"> press for test</button>
 
-             <div id="getResultDiv">
-                <ul class="list-group">
-              </ul>
-            </div>
+    <div id="getResultDiv">
+         <ul class="list-group">
+       </ul>
+   </div>
            
 
             
                    
-            
-          
-
-            <script>
-  /*              var mymap = L.map('mapid').setView([51.505, -0.09], 3);
-
-                L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-                    maxZoom: 18,
-                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-                        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                    id: 'mapbox/streets-v11',
-                    tileSize: 512,
-                    zoomOffset: -1
-                }).addTo(mymap);
-
-                
-
-
-                 
-
-                L.marker([34.0544, -118.244]).addTo(mymap)
-                //.bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
-
-
-
-
-                var popup = L.popup();*/
-            </script>
+    
 
 
 </body>

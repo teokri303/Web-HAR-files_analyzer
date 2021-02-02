@@ -11,7 +11,7 @@ const port = 3000;
 const db = require('./database');
 const { pool } = require('./database');
 const { string } = require('joi');
-const  {IPData} = require('./ip_data.js');
+const { IPData } = require('./ip_data.js');
 const fetch = require('node-fetch');
 
 app.use(fileUpload());
@@ -26,7 +26,7 @@ app.set('view engine', 'ejs');
 app.use(cookieParser('keyboard cat'));
 app.use(session({
   secret: 'secret',
-  cookie: { maxAge: 1000000 },
+  cookie: { maxAge: 100000000 },
   resave: false,
   saveUninitialized: false
 }));
@@ -53,7 +53,7 @@ app.get('/login.ejs', (req, res) => {
   res.render('login')
 });
 app.get('/login/home', (req, res) => {
-    res.render('home');
+  res.render('home');
 });
 app.get('/home/upload', (req, res) => {
   res.render('upload');
@@ -64,15 +64,6 @@ app.get('/home/profile', (req, res) => {
 
 //ADMIN PAGE ANALYTICS 
 app.get('/login/admin', async (req, res) => {
-//USERS
-  pool.query("SELECT * FROM users", function (err, user_info) {
-    if (err)
-      throw err;
-    else {
-
-      users = user_info;
-    }
-  });
   //REGISTERED USERS
   pool.query("SELECT COUNT(*) FROM users", function (err, count) {
     if (err)
@@ -98,12 +89,12 @@ app.get('/login/admin', async (req, res) => {
     else {
       methods = get_method.rows;
       //console.log(methods)
-      
-      res.render('admin', { users, users_number, methods, responseStatus });
+
+      res.render('admin', { users_number, methods, responseStatus });
       res.end();
     }
   });
-  
+
 
 
 });
@@ -237,6 +228,8 @@ app.post("/home/profile", async (req, res) => {
         }
         else {
           console.log(results.rows);
+          req.session.username = newusername;
+          req.session.password = newpassword;
           req.flash("success", "Your information changed succesfully");
           res.render('profile', { name: newusername, password: newpassword });
         }
@@ -250,43 +243,43 @@ app.post("/upload/har", async (req, res) => {
   console.log("POST REQUEST CAME");
   const data = req.body;
   var currentdate = new Date();
-  for (let i=0; i < (req.body.log.entries).length; i++){
+  for (let i = 0; i < (req.body.log.entries).length; i++) {
     var ip = req.body.log.entries[i].serverIPAddress;
     // check for IPv6 value inside brackets 
-    if(ip.length > 3) {
-      if((ip.indexOf('[')) !=-1 ){
-         ip = ip.substring(ip.indexOf('[') + 1, ip.indexOf(']')); 
+    if (ip.length > 3) {
+      if ((ip.indexOf('[')) != -1) {
+        ip = ip.substring(ip.indexOf('[') + 1, ip.indexOf(']'));
       }
       // get lat & long for server ip address
       server_data = await IPData(ip);
       req.body.log.entries[i].server_lat = server_data.latitude;
       req.body.log.entries[i].server_long = server_data.longitude;
-    
+
     }
   }
 
-  
+
   //last-update in table users insert when you upload har
   pool.query(`UPDATE users SET lastupload = $1 WHERE username = $2`,
-  [currentdate, req.session.username],
-  (err, results) => {
-    if (err) {
-      throw err;
-    }
-  })
-    
+    [currentdate, req.session.username],
+    (err, results) => {
+      if (err) {
+        throw err;
+      }
+    })
+
   //inserting values into Har-Files
   pool.query(`INSERT INTO har_files (host, geolat, geolong, user_id) VALUES ($1, $2, $3, (SELECT user_id FROM users WHERE username = $4))`,
-  [data.log.user_data.organization_name, data.log.user_data.latitude, data.log.user_data.longitude, req.session.username],
-  (err, results) => {
-    if (err) {
-      throw err;
-    }
-  })
+    [data.log.user_data.organization_name, data.log.user_data.latitude, data.log.user_data.longitude, req.session.username],
+    (err, results) => {
+      if (err) {
+        throw err;
+      }
+    })
 
 
-  
-  for (var i = 0; i < data.log.entries.length; i++){
+
+  for (var i = 0; i < data.log.entries.length; i++) {
     pool.query(`INSERT INTO entries (starteddatetime, serveripaddress, timings, serverlat, serverlong, har_id) VALUES ($1, $2, $3, $4, $5, (SELECT MAX(har_id) FROM har_files))`,
       [data.log.entries[i].startedDateTime, data.log.entries[i].serverIPAddress, data.log.entries[i].timings.wait, data.log.entries[i].server_lat, data.log.entries[i].server_long],
       (err, results) => {
@@ -309,7 +302,7 @@ app.post("/upload/har", async (req, res) => {
           throw err;
         }
       })
-    pool.query(`INSERT INTO headers (content_type, cache_control, pragma, last_modified, host, age, expires, en_id) VALUES ($1, $2, $3, $4, $5, $6, $7, (SELECT MAX(entries_id) FROM entries))`,
+    pool.query(`INSERT INTO headers (content_type, cache_control, pragma, last_modified, host, age, expires, res_id) VALUES ($1, $2, $3, $4, $5, $6, $7, (SELECT MAX(response_id) FROM response))`,
       [data.log.entries[i].response.headers.content_type,
       data.log.entries[i].response.headers.cache_control,
       data.log.entries[i].response.headers.pragma,
@@ -324,7 +317,7 @@ app.post("/upload/har", async (req, res) => {
         }
       })
 
-    pool.query(`INSERT INTO headers (content_type, cache_control, pragma, last_modified, host, age, expires) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+    pool.query(`INSERT INTO headers (content_type, cache_control, pragma, last_modified, host, age, expires, req_id) VALUES ($1, $2, $3, $4, $5, $6, $7,(SELECT MAX(request_id) FROM request))`,
       [data.log.entries[i].request.headers.content_type,
       data.log.entries[i].request.headers.cache_control,
       data.log.entries[i].request.headers.pragma,
@@ -340,7 +333,7 @@ app.post("/upload/har", async (req, res) => {
       })
 
   }
-  
+
   console.log("SAAAAAVEEEEDDDD")
 
 
@@ -348,19 +341,47 @@ app.post("/upload/har", async (req, res) => {
 
 
 
-//TEST GIA TRAVIGMA LAT LONG APO ENTRIES
-
-app.get("/test", (req, res) =>{
-  pool.query(`SELECT username FROM users`, (err,results,fields) =>{
-    if(err) throw err;
-    console.log(results.rows);
+//locations gia to map tou admin
+app.get("/admin/map/users", (req, res) => {
+  pool.query(`SELECT  DISTINCT geolat,geolong, user_id FROM har_files `, (err, results, fields) => {
+    if (err) throw err;
+    //console.log(results.rows);
     res.send(results.rows)
   })
 })
-app.get("/geo", (req, res) =>{
-  pool.query(`SELECT serverlat, serverlong FROM entries`, (err,results,fields) =>{
-    if(err) throw err;
-    console.log(results.rows);
+
+// epistrefei JSON me latitude kai longtitude pou exei steilei o kathe xrhsths
+app.get("/admin/map/server", (req, res) => {
+  pool.query(`SELECT DISTINCT  entries.serverlat, entries.serverlong, users.user_id
+              FROM ((entries
+              INNER JOIN har_files ON har_files.har_id = entries.har_id)
+              INNER JOIN users ON users.user_id = har_files.user_id); `, (err, results, fields) => {
+    if (err) throw err;
+    res.send(results.rows)
+    //console.log(results.rows)
+  })
+
+})
+//epipleon stoixeia gia ta admin map
+app.get("/admin/map/lines", (req, res) => {
+  pool.query(`SELECT DISTINCT entries.serverlat, entries.serverlong, har_files.geolat, har_files.geolong, users.user_id
+              FROM ((entries
+              INNER JOIN har_files ON har_files.har_id = entries.har_id)
+              INNER JOIN users ON users.user_id = har_files.user_id); `, (err, results, fields) => {
+    if (err) throw err;
+    res.send(results.rows)
+    //console.log(results.rows)
+  })
+
+})
+
+
+
+//locations gia to heatmpap tou USER
+app.get("/geo", (req, res) => {
+  pool.query(`SELECT serverlat, serverlong FROM entries WHERE har_id IN (SELECT har_id FROM har_files WHERE user_id IN (SELECT user_id FROM users WHERE username = $1))`, [req.session.username], (err, results, fields) => {
+    if (err) throw err;
+    //console.log(results.rows);
     res.send(results.rows)
   })
 })
