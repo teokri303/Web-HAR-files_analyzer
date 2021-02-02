@@ -243,19 +243,63 @@ app.post("/upload/har", async (req, res) => {
   console.log("POST REQUEST CAME");
   const data = req.body;
   var currentdate = new Date();
-  for (let i = 0; i < (req.body.log.entries).length; i++) {
+  var cached_ips = new Object();
+  cached_ips.ip = [];
+  console.log(cached_ips.ip.length);
+  console.log(currentdate);
+  for (let i=0; i < (req.body.log.entries).length; i++){
     var ip = req.body.log.entries[i].serverIPAddress;
     // check for IPv6 value inside brackets 
     if (ip.length > 3) {
       if ((ip.indexOf('[')) != -1) {
         ip = ip.substring(ip.indexOf('[') + 1, ip.indexOf(']'));
       }
+      //console.log(ip);
+      if ((cached_ips.ip).length == 0){ 
       // get lat & long for server ip address
-      server_data = await IPData(ip);
-      req.body.log.entries[i].server_lat = server_data.latitude;
-      req.body.log.entries[i].server_long = server_data.longitude;
+        console.log("first IP to be cached" + " " + ip);
+        cached_ips.ip[0] =  new Object();
+        cached_ips.ip[0].ip = ip;
+        //console.log(cached_ips.ip[0].ip);
+        server_data = await IPData(ip);
+        req.body.log.entries[i].server_lat = server_data.latitude;
+        req.body.log.entries[i].server_long = server_data.longitude;
+        cached_ips.ip[0].lat = server_data.latitude;
+        cached_ips.ip[0].long = server_data.longitude;
+        //console.log("cached" + cached_ips.ip[0].long);
+      }
+      
+      else {
+          var cached = false;
+          console.log("cached: " + " " + cached);
+          for (let k=0; k < (cached_ips.ip).length; k++){
+            console.log("searching for IP:" + ip + "IP cached is:" + cached_ips.ip[k].ip);
+            if(cached_ips.ip[k].ip == ip){
+              req.body.log.entries[i].server_lat = cached_ips.ip[k].lat;
+              req.body.log.entries[i].server_long = cached_ips.ip[k].long;
+              console.log("ALREADY CACHED");
+              cached = true;
+            }
+          } 
+          if (!cached){
+            console.log("cached:" + " " + cached);
+            server_data = await IPData(ip);
+            req.body.log.entries[i].server_lat = server_data.latitude;
+            req.body.log.entries[i].server_long = server_data.longitude;
+            let counter = cached_ips.ip.length;
+            cached_ips.ip[counter] =  new Object();
+            cached_ips.ip[counter].ip = ip;
+            cached_ips.ip[counter].lat = server_data.latitude;
+            cached_ips.ip[counter].long = server_data.longitude;
+            console.log("IP not cached" + ip);
+            console.log("cached " + " " + cached_ips.ip[counter].long)
 
+          }
+      }
+      
     }
+
+
   }
 
 
