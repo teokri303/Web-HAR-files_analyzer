@@ -432,7 +432,14 @@ app.get("/geo", (req, res) => {
 
 
 
-
+// header content types
+app.get("/admin/headers/types", (req, res) => {
+  pool.query(`SELECT  DISTINCT content_type FROM headers WHERE content_type IS NOT NULL `, (err, results, fields) => {
+    if (err) throw err;
+    //console.log(results.rows);
+    res.send(results.rows)
+  })
+})
 
 
 

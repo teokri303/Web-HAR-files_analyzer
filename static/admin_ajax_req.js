@@ -7,6 +7,7 @@ $(document).ready(function () {
   userLocationsGet();
   serverLocationsGet();
   getLinesInfo();
+  headers_content();
   // DO GET
   function userLocationsGet() {
     $.ajax({
@@ -91,3 +92,35 @@ $(document).ready(function () {
 
 
 })
+
+
+//ERWTIMA 3
+
+function headers_content() {
+  $.ajax({
+    type: "GET",
+    url: "/admin/headers/types",
+    success: function (result) {
+      console.log(result)
+      for (let i = 0; i < result.length; i++) {
+        if (result[i].content_type){
+        console.log(result[i].content_type.indexOf('text/html') + result[i].content_type );
+        }
+      }
+      /*
+      const users = result;
+
+      var myIcon = L.icon({
+        iconUrl: "/human-icon.png",
+        iconSize: [38, 60]
+      });
+
+      for (var i = 0; i < result.length; i++) {
+        marker = new L.marker([result[i].geolat, result[i].geolong],
+          { icon: myIcon })
+          .addTo(mymap);
+      }
+      */
+    }
+  });
+}
