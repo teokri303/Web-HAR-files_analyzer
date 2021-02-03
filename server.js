@@ -385,7 +385,15 @@ app.post("/upload/har", async (req, res) => {
 
 
 
-//locations gia to map tou admin
+//USER HEATMAP HANDLER
+app.get("/geo", (req, res) => {
+  pool.query(`SELECT serverlat, serverlong FROM entries WHERE har_id IN (SELECT har_id FROM har_files WHERE user_id IN (SELECT user_id FROM users WHERE username = $1))`, [req.session.username], (err, results, fields) => {
+    if (err) throw err;
+    //console.log(results.rows);
+    res.send(results.rows)
+  })
+})
+//ADMIN MAP INFORMATION 1
 app.get("/admin/map/users", (req, res) => {
   pool.query(`SELECT  DISTINCT geolat,geolong, user_id FROM har_files `, (err, results, fields) => {
     if (err) throw err;
@@ -393,8 +401,7 @@ app.get("/admin/map/users", (req, res) => {
     res.send(results.rows)
   })
 })
-
-// epistrefei JSON me latitude kai longtitude pou exei steilei o kathe xrhsths
+// ADMIN MAP INFORMATION 2
 app.get("/admin/map/server", (req, res) => {
   pool.query(`SELECT DISTINCT  entries.serverlat, entries.serverlong, users.user_id
               FROM ((entries
@@ -406,7 +413,7 @@ app.get("/admin/map/server", (req, res) => {
   })
 
 })
-//epipleon stoixeia gia ta admin map
+//ADMIN MAP INFORMATION 3
 app.get("/admin/map/lines", (req, res) => {
   pool.query(`SELECT DISTINCT entries.serverlat, entries.serverlong, har_files.geolat, har_files.geolong, users.user_id
               FROM ((entries
@@ -419,15 +426,21 @@ app.get("/admin/map/lines", (req, res) => {
 
 })
 
-
-
-//locations gia to heatmpap tou USER
-app.get("/geo", (req, res) => {
-  pool.query(`SELECT serverlat, serverlong FROM entries WHERE har_id IN (SELECT har_id FROM har_files WHERE user_id IN (SELECT user_id FROM users WHERE username = $1))`, [req.session.username], (err, results, fields) => {
+//ADMIN PIE CHART 3-C
+app.get("/admin/pie", (req, res) => {
+  pool.query(`SELECT
+              COUNT(CASE WHEN cache_control LIKE '%private%' THEN 1 END) AS private,
+              COUNT(CASE WHEN cache_control LIKE '%public%' THEN 1 END) AS public,
+              COUNT(CASE WHEN cache_control LIKE '%no-cache%' THEN 1 END) AS no_catch,
+              COUNT(CASE WHEN cache_control LIKE '%no-store%' THEN 1 END) AS no_store
+              FROM headers WHERE content_type LIKE '%image%' `, (err, results, fields) => { //να βαλω ντροπνταουν μενου και καθε κουμπι να βγαζει και αναλογα αποτελεσματα ανα content type !!!!! ιδια querie πολλα ajax πανω σε κουμπια
     if (err) throw err;
-    //console.log(results.rows);
+
+    console.log(results.rows)
     res.send(results.rows)
+    //console.log(results.rows)
   })
+
 })
 
 
@@ -436,8 +449,8 @@ app.get("/geo", (req, res) => {
 
 
 
-//axreiasto alla mporei na volepsei ws texnikh gia na exoume se allo fakelo ta queries kai ta functions 
-app.get('/users', db.getUsers);
+
+
 
 app.listen(port, () => {
   console.log(`App running on port ${port}.`)

@@ -1,6 +1,5 @@
 
 //ADMIN MAP AJAX CALL
-
 $(document).ready(function () {
 
 
@@ -53,8 +52,8 @@ $(document).ready(function () {
           marker = new L.marker([result[i].serverlat, result[i].serverlong])
             .addTo(mymap);
         }
-        
-       }
+
+      }
     });
   }
 
@@ -65,14 +64,14 @@ $(document).ready(function () {
       success: function (result) {
         console.log("lines info success")
         console.log(result)
-        
-        for (var i=0; i<result.length; i++){
-          var polyline = L.polyline([[result[i].geolat, result[i].geolong],[result[i].serverlat, result[i].serverlong]], 
-            {color: 'black', stroke: true}).addTo(mymap);
+
+        for (var i = 0; i < result.length; i++) {
+          var polyline = L.polyline([[result[i].geolat, result[i].geolong], [result[i].serverlat, result[i].serverlong]],
+            { color: 'black' }).addTo(mymap);
         }
-        
-        
-       }
+
+
+      }
     });
   }
 
@@ -90,4 +89,49 @@ $(document).ready(function () {
   }).addTo(mymap);
 
 
+})
+
+
+$(document).ready(function () {
+
+
+  pieChartGet();
+  // DO GET
+  function pieChartGet() {
+    $.ajax({
+      type: "GET",
+      url: "/admin/pie",
+      success: function (result) {
+        console.log("pie info")
+        console.log(result)
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+
+        var chart = new Chart(ctx, {
+          // The type of chart we want to create
+          type: 'pie',
+
+          // The data for our dataset
+          data: {
+            labels: ['PRIVATE', 'PUBLIC', 'NO-CACHE', 'NO-STORE'],
+            datasets: [{
+              label: 'My First dataset',
+              backgroundColor: [
+                'rgba(33, 99, 255, 0.8)',
+                'rgba(11, 255, 11, 0.8)',
+                'rgba(245, 0, 253, 0.8)',
+                'rgba(112, 112, 112, 0.8)'
+              ],
+              borderColor: 'rgba(88, 88, 88, 0.2)',
+              data: [result[0].private, result[0].public, result[0].no_catch, result[0].no_store]
+            }]
+          },
+
+          // Configuration options go here
+          options: {}
+        });
+
+      }
+    });
+  }
 })
