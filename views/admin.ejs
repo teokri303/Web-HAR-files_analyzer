@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
         crossorigin="" />
+        <link href="/admin.css" rel="stylesheet" type="text/css">    
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin=""></script>
@@ -102,9 +103,19 @@
 
             <h3 style="text-align: center; margin-top: 30px;">IP'S MAP</h3>
             <p style="text-align: center;">Location of IP's clients send HTTP requests</p>
-            <div id="mapid" style="height: 670px; width:auto; margin-top: 30px;"></div>
-
-            <canvas id="myChart" style="margin-top: 50px; height: 60px;"></canvas>
+            <div id="mapid" style="height: 500px; width:auto; margin-top: 30px;"></div>
+            <div class="dropdown">
+                <button class="dropbtn">Modify chart</button>
+                <div class="dropdown-content">
+                  <a id="link1" >Image</a>
+                  <a href="link2">Text Javascript</a>
+                  <a href="link3">Link 3</a>
+                  <a href="reset">Reset</a>
+                </div>
+              </div>
+            <canvas id="myChart" style="margin-top: 50px; height: fit-content; "></canvas>
+            
+           
 
             
 

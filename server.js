@@ -427,7 +427,7 @@ app.get("/admin/map/lines", (req, res) => {
 })
 
 //ADMIN PIE CHART 3-C
-app.get("/admin/pie", (req, res) => {
+app.get("/admin/pie/image", (req, res) => {
   pool.query(`SELECT
               COUNT(CASE WHEN cache_control LIKE '%private%' THEN 1 END) AS private,
               COUNT(CASE WHEN cache_control LIKE '%public%' THEN 1 END) AS public,
@@ -448,6 +448,56 @@ app.get("/admin/pie", (req, res) => {
 
 
 
+//ADMIN PIE CHART 3-C
+app.get("/admin/pie", (req, res) => {
+  pool.query(`SELECT
+              COUNT(CASE WHEN cache_control LIKE '%private%' THEN 1 END) AS private,
+              COUNT(CASE WHEN cache_control LIKE '%public%' THEN 1 END) AS public,
+              COUNT(CASE WHEN cache_control LIKE '%no-cache%' THEN 1 END) AS no_catch,
+              COUNT(CASE WHEN cache_control LIKE '%no-store%' THEN 1 END) AS no_store
+              FROM headers`, (err, results, fields) => {
+    if (err) throw err;
+
+    console.log(results.rows)
+    res.send(results.rows)
+    //console.log(results.rows)
+  })
+
+})
+
+//ADMIN PIE CHART 3-C
+app.get("/admin/pie/image", (req, res) => {
+  pool.query(`SELECT
+              COUNT(CASE WHEN cache_control LIKE '%private%' THEN 1 END) AS private,
+              COUNT(CASE WHEN cache_control LIKE '%public%' THEN 1 END) AS public,
+              COUNT(CASE WHEN cache_control LIKE '%no-cache%' THEN 1 END) AS no_catch,
+              COUNT(CASE WHEN cache_control LIKE '%no-store%' THEN 1 END) AS no_store
+              FROM headers WHERE content_type LIKE '%image%' `, (err, results, fields) => {
+    if (err) throw err;
+
+    console.log( results.rows)
+    res.send(results.rows)
+    //console.log(results.rows)
+  })
+
+})
+
+//ADMIN PIE CHART 3-C
+app.get("/admin/pie/text_javascript", (req, res) => {
+  pool.query(`SELECT
+              COUNT(CASE WHEN cache_control LIKE '%private%' THEN 1 END) AS private,
+              COUNT(CASE WHEN cache_control LIKE '%public%' THEN 1 END) AS public,
+              COUNT(CASE WHEN cache_control LIKE '%no-cache%' THEN 1 END) AS no_catch,
+              COUNT(CASE WHEN cache_control LIKE '%no-store%' THEN 1 END) AS no_store
+              FROM headers WHERE content_type LIKE '%text/javascript%' `, (err, results, fields) => {
+    if (err) throw err;
+
+    console.log( results.rows)
+    res.send(results.rows)
+    //console.log(results.rows)
+  })
+
+})
 
 
 
