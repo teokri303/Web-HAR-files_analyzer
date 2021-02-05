@@ -59,7 +59,23 @@ app.get('/home/upload', (req, res) => {
   res.render('upload');
 });
 app.get('/home/profile', (req, res) => {
-  res.render('profile', { name: req.session.username, password: req.session.password });
+  pool.query('SELECT lastupload FROM users WHERE username = $1',[req.session.username], function(err, result){
+    if (err)
+    throw err;
+    else{
+      time = result.rows;
+      //console.log(time)
+    }
+
+  })
+  pool.query("SELECT COUNT(user_id) FROM har_files WHERE user_id IN (SELECT user_id FROM users WHERE username = $1)",[req.session.username], function (err, count) {
+    if (err)
+      throw err;
+      else {
+        console.log(count)
+        res.render('profile', { name: req.session.username, password: req.session.password, last_upload: time, count: count });
+      }
+  });
 });
 
 //ADMIN PAGE ANALYTICS 
@@ -73,13 +89,23 @@ app.get('/login/admin', async (req, res) => {
     }
   });
   //RESPONSE STATUS COUNT
-  pool.query("SELECT status, COUNT(*) FROM response GROUP BY status", function (err, status_count) {
+  pool.query("SELECT status, COUNT(*) FROM response GROUP BY status", function (err, status) {
     if (err)
       throw err;
     else {
-      responseStatus = status_count.rows;
+      responseStatus = status.rows;
       //console.log(parseInt(responseStatus[0].status))
       //console.log(responseStatus)
+    }
+  });
+  //SELECT NUMBER OF INTERNET PROVIDERS
+  pool.query("SELECT COUNT(DISTINCT host) AS count FROM har_files", function (err, host) {
+    if (err)
+      throw err;
+    else {
+      host_count = host.rows;
+      //console.log(host_count)
+      
     }
   });
   //METHODS STATUS COUNT
@@ -90,7 +116,7 @@ app.get('/login/admin', async (req, res) => {
       methods = get_method.rows;
       //console.log(methods)
 
-      res.render('admin', { users_number, methods, responseStatus });
+      res.render('admin', { users_number, methods, responseStatus, host_count});
       res.end();
     }
   });
@@ -380,7 +406,58 @@ app.post("/upload/har", async (req, res) => {
 
   console.log("SAAAAAVEEEEDDDD")
 
+})
 
+//INFO GIA MONADIKA DOMAINS SOTN ADMIN
+app.get('/admin/info/domains',(req,res)=>{
+  pool.query("SELECT COUNT(DISTINCT url) AS count FROM request WHERE url LIKE '%%www.%.com%' OR url LIKE '%www.%.gr%'", function (err, results) {
+    if (err) throw err;
+    //console.log(results.rows)
+    res.send(results.rows)
+  
+  });
+})
+
+//MESH HLIKIA ISTOANTIKEIMENWN  ALL
+app.get('/admin/info/age',(req,res)=>{
+  pool.query("SELECT cache_control FROM headers WHERE cache_control IS NOT NULL AND cache_control LIKE '%max-age%' ;", function (err, results) {
+    if (err) throw err;
+    //console.log(results.rows)
+    res.send(results.rows)
+  });
+})
+//MESH HLIKIA ANA CONTENT-TYPE--APPLICATION
+app.get('/admin/info/age/application',(req,res)=>{
+  pool.query("SELECT cache_control FROM headers WHERE cache_control IS NOT NULL AND cache_control LIKE '%max-age%' AND content_type LIKE '%application%' ;", function (err, results) {
+    if (err) throw err;
+    //console.log(results.rows)
+    res.send(results.rows)
+  });
+})
+//MESH HLIKIA ANA CONTENT-TYPE--IMAGE
+app.get('/admin/info/age/image',(req,res)=>{
+  pool.query("SELECT cache_control FROM headers WHERE cache_control IS NOT NULL AND cache_control LIKE '%max-age%' AND content_type LIKE '%image%' ;", function (err, results) {
+    if (err) throw err;
+    //console.log(results.rows)
+    res.send(results.rows)
+  });
+})
+//MESH HLIKIA ANA CONTENT-TYPE--TEXT
+app.get('/admin/info/age/text',(req,res)=>{
+  pool.query("SELECT cache_control FROM headers WHERE cache_control IS NOT NULL AND cache_control LIKE '%max-age%' AND content_type LIKE '%text%' ;", function (err, results) {
+    if (err) throw err;
+    //console.log(results.rows)
+    res.send(results.rows)
+  });
+})
+
+//CHART 2 TIMIMNGS
+app.get('/admin/info/chart/info',(req,res)=>{
+  pool.query("SELECT EXTRACT(hour FROM starteddatetime), AVG(timings) FROM entries GROUP BY EXTRACT(hour FROM starteddatetime) ORDER BY EXTRACT(hour FROM starteddatetime) ASC   ", function (err, results) {
+    if (err) throw err;
+    console.log(results.rows)
+    res.send(results.rows)
+  });
 })
 
 
@@ -458,7 +535,7 @@ app.get("/admin/pie", (req, res) => {
               FROM headers`, (err, results, fields) => {
     if (err) throw err;
 
-    console.log(results.rows)
+    //console.log(results.rows)
     res.send(results.rows)
     //console.log(results.rows)
   })
@@ -475,7 +552,7 @@ app.get("/admin/pie/image", (req, res) => {
               FROM headers WHERE content_type LIKE '%image%' `, (err, results, fields) => {
     if (err) throw err;
 
-    console.log( results.rows)
+    //console.log( results.rows)
     res.send(results.rows)
     //console.log(results.rows)
   })
@@ -492,9 +569,9 @@ app.get("/admin/pie/text_javascript", (req, res) => {
               FROM headers WHERE content_type LIKE '%text/javascript%' `, (err, results, fields) => {
     if (err) throw err;
 
-    console.log( results.rows)
+    //console.log( results.rows)
     res.send(results.rows)
-    //console.log(results.rows)
+    
   })
 
 })

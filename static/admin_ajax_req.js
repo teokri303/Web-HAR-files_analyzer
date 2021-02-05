@@ -90,10 +90,10 @@ $(document).ready(function () {
 
 
   pieChartGet();
-  $("#link1").click(function(){
+  $("#link1").click(function () {
     pieChartImage();
   });
-  $("#reset").click(function(){
+  $("#reset").click(function () {
     pieChartGet();
   });
 
@@ -153,31 +153,31 @@ function pieChartImage() {
 
 
 function getchart(result) {
-      var ctx = document.getElementById('myChart').getContext('2d');
+  var ctx = document.getElementById('myChart').getContext('2d');
 
-      window.chart = new Chart(ctx, {
-        // The type of chart we want to create
-        type: 'pie',
+  window.chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'pie',
 
-        // The data for our dataset
-        data: {
-          labels: ['PRIVATE', 'PUBLIC', 'NO-CACHE', 'NO-STORE'],
-          datasets: [{
-            label: 'My First dataset',
-            backgroundColor: [
-              'rgba(33, 99, 255, 0.8)',
-              'rgba(11, 255, 11, 0.8)',
-              'rgba(245, 0, 253, 0.8)',
-              'rgba(112, 112, 112, 0.8)'
-            ],
-            borderColor: 'rgba(88, 88, 88, 0.2)',
-            data: [result[0].private, result[0].public, result[0].no_catch, result[0].no_store]
-          }]
-        },
+    // The data for our dataset
+    data: {
+      labels: ['PRIVATE', 'PUBLIC', 'NO-CACHE', 'NO-STORE'],
+      datasets: [{
+        label: 'My First dataset',
+        backgroundColor: [
+          'rgba(33, 99, 255, 0.8)',
+          'rgba(11, 255, 11, 0.8)',
+          'rgba(245, 0, 253, 0.8)',
+          'rgba(112, 112, 112, 0.8)'
+        ],
+        borderColor: 'rgba(88, 88, 88, 0.2)',
+        data: [result[0].private, result[0].public, result[0].no_catch, result[0].no_store]
+      }]
+    },
 
-        // Configuration options go here
-        options: {}
-      });
+    // Configuration options go here
+    options: {}
+  });
 }
 
 function addData(chart, data) {
@@ -186,7 +186,199 @@ function addData(chart, data) {
     dataset.data.pop();
   });
   chart.data.datasets.forEach((dataset) => {
-      dataset.data.push(data);
+    dataset.data.push(data);
   });
   chart.update();
 }
+
+
+
+//AVERAGE AGE OF WEB OBJECT PER CONTENT TYPE
+$(document).ready(function () {
+
+  uniqueDomainsGet();
+  ageOfElements_all();
+  ageOfElements_application();
+  ageOfElements_image();
+  ageOfElements_text();
+
+
+  function uniqueDomainsGet() {
+    $.ajax({
+      type: "GET",
+      url: "/admin/info/domains",
+      success: function (result) {
+        //console.log(result[0].count)
+
+        $('#domains_col').append(result[0].count);
+
+      }
+    });
+  }
+
+  function ageOfElements_all() {
+    $.ajax({
+      type: "GET",
+      url: "/admin/info/age",
+      success: function (result) {
+        for (var i = 0; i < result.length; i++) {
+          if (result[i].cache_control.indexOf(',') == -1 || result[i].cache_control.indexOf(',') > 5) {
+            result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf('=') + 10);
+          }
+          if ((result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('='))) > 0) {
+            result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('=')));
+          }
+
+        }
+        console.log(result)
+        var sum = 0
+        for (var i = 0; i < result.length; i++) {
+          sum = sum + parseInt(result[i].cache_control);
+        }
+        console.log(sum)
+        var waiting_time = ((sum / result.length) / 86400); //metatroph se meres 
+        var avg_time = waiting_time.toFixed(0); //afairesh twn dekadikwn
+        //console.log(avg_time + " days")
+
+        $('#avg_all').append(avg_time + " days");
+
+
+      }
+    });
+  }
+
+  function ageOfElements_application() {
+    $.ajax({
+      type: "GET",
+      url: "/admin/info/age/application",
+      success: function (result) {
+        for (var i = 0; i < result.length; i++) {
+          if (result[i].cache_control.indexOf(',') == -1 || result[i].cache_control.indexOf(',') > 5) {
+            result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf('=') + 10);
+          }
+          if ((result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('='))) > 0) {
+            result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('=')));
+          }
+
+        }
+        console.log(result)
+        var sum = 0
+        for (var i = 0; i < result.length; i++) {
+          sum = sum + parseInt(result[i].cache_control);
+        }
+        console.log(sum)
+        var waiting_time = ((sum / result.length) / 86400); //metatroph se meres 
+        var avg_time = waiting_time.toFixed(0); //afairesh twn dekadikwn
+        //console.log(avg_time + " days")
+
+        $('#avg_app').append(avg_time + " days");
+
+
+      }
+    });
+  }
+
+  function ageOfElements_image() {
+    $.ajax({
+      type: "GET",
+      url: "/admin/info/age/image",
+      success: function (result) {
+        for (var i = 0; i < result.length; i++) {
+          if (result[i].cache_control.indexOf(',') == -1 || result[i].cache_control.indexOf(',') > 5) {
+            result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf('=') + 10);
+          }
+          if ((result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('='))) > 0) {
+            result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('=')));
+          }
+
+        }
+        console.log(result)
+        var sum = 0
+        for (var i = 0; i < result.length; i++) {
+          sum = sum + parseInt(result[i].cache_control);
+        }
+        console.log(sum)
+        var waiting_time = ((sum / result.length) / 86400); //metatroph se meres 
+        var avg_time = waiting_time.toFixed(0); //afairesh twn dekadikwn
+        //console.log(avg_time + " days")
+
+        $('#avg_image').append(avg_time + " days");
+
+
+      }
+    });
+  }
+
+  function ageOfElements_text() {
+    $.ajax({
+      type: "GET",
+      url: "/admin/info/age/text",
+      success: function (result) {
+        for (var i = 0; i < result.length; i++) {
+          if (result[i].cache_control.indexOf(',') == -1 || result[i].cache_control.indexOf(',') > 5) {
+            result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf('=') + 10);
+          }
+          if ((result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('='))) > 0) {
+            result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('=')));
+          }
+
+        }
+        console.log(result)
+        var sum = 0
+        for (var i = 0; i < result.length; i++) {
+          sum = sum + parseInt(result[i].cache_control);
+        }
+        console.log(sum)
+        var waiting_time = ((sum / result.length) / 86400); //metatroph se meres 
+        var avg_time = waiting_time.toFixed(0); //afairesh twn dekadikwn
+        //console.log(avg_time + " days")
+
+        $('#avg_text').append(avg_time + " days");
+
+
+      }
+    });
+  }
+
+})
+
+
+$(document).ready(function () {
+  chartInfo();
+
+  function chartInfo() {
+    $.ajax({
+      type: "GET",
+      url: "/admin/info/chart/info",
+      success: function (result) {
+        //console.log(result)
+        var xLabels = []
+        var dataset = []
+        for (var i =0; i< result.length; i++){
+          dataset.push(result[i].avg)
+          xLabels.push(result[i].date_part + ":00")
+          
+        }
+
+        
+        var ctx = document.getElementById('myChart2').getContext('2d');
+        var chart = new Chart(ctx, {
+          // The type of chart we want to create
+          type: 'bar',
+
+          // The data for our dataset
+          data: {
+            labels: xLabels,
+            datasets: [{
+              label: 'My First dataset',
+              backgroundColor: 'rgb(255, 99, 132)',
+              borderColor: 'rgb(255, 99, 132)',
+              data: dataset
+            }]
+          }
+        });
+      }
+    });
+  }
+
+}) 
