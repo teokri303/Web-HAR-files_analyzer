@@ -97,29 +97,17 @@ $(document).ready(function () {
     pieChartGet();
   });
 
+  $("#application_javascript").click(function(){
+    pieChartJavascript();
+  });
+
+
+  $("#font").click(function(){
+    pieChartFont();
+  });
+
 })
 
-/*
-$(document).ready(function () {
-
-  pieChartGet();
-  $("#link1").click(function(){
-    pieChartImage();
-  });
-  $("#reset").click(function(){
-    pieChartGet();
-  });
-})
-
-*/
-
-/*
-$(document).ready(function(){
-  $("link1").click(function(){
-    alert("The paragraph was clicked.");
-  });
-});
-*/
 
 // GET PIE CHART
 function pieChartGet() {
@@ -127,13 +115,14 @@ function pieChartGet() {
     type: "GET",
     url: "/admin/pie",
     success: function (result) {
-      console.log("pie info")
-      console.log(result)
+      if(window.chart){
+          window.chart.destroy();
+      }
       getchart(result);
-
-    }
-  });
+      }
+    });
 }
+
 
 //GET pie chart for content type: image
 function pieChartImage() {
@@ -145,12 +134,36 @@ function pieChartImage() {
       console.log(result)
       //update data 
       //addData(window.chart, result);
+      window.chart.destroy();
       getchart(result);
 
     }
   });
 }
 
+//GET pie chart for content type: application Javascript
+function pieChartJavascript() {
+  $.ajax({
+    type: "GET",
+    url: "/admin/pie/application_javascript",
+    success: function (result) {
+      window.chart.destroy();
+      getchart(result);
+    }
+  });
+}
+
+//GET pie chart for content type: font
+function pieChartFont() {
+  $.ajax({
+    type: "GET",
+    url: "/admin/pie/font",
+    success: function (result) {
+      window.chart.destroy();
+      getchart(result);
+    }
+  });
+}
 
 function getchart(result) {
   var ctx = document.getElementById('myChart').getContext('2d');
@@ -176,10 +189,13 @@ function getchart(result) {
     },
 
     // Configuration options go here
-    options: {}
+    options: {
+      responsive:false
+    }
   });
 }
 
+//NO USE
 function addData(chart, data) {
   //chart.data.labels.push(label);
   chart.data.datasets.forEach((dataset) => {
