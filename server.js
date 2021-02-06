@@ -430,17 +430,60 @@ app.get("/geo", (req, res) => {
   })
 })
 
+<<<<<<< Updated upstream
+=======
 
 
+
+//ADMIN PIE CHART 3-C
+app.get("/admin/pie/image", (req, res) => {
+  pool.query(`SELECT
+              COUNT(CASE WHEN cache_control LIKE '%private%' THEN 1 END) AS private,
+              COUNT(CASE WHEN cache_control LIKE '%public%' THEN 1 END) AS public,
+              COUNT(CASE WHEN cache_control LIKE '%no-cache%' THEN 1 END) AS no_catch,
+              COUNT(CASE WHEN cache_control LIKE '%no-store%' THEN 1 END) AS no_store
+              FROM headers WHERE content_type LIKE '%image%' `, (err, results, fields) => {
+    if (err) throw err;
+>>>>>>> Stashed changes
+
+
+<<<<<<< Updated upstream
 // header content types
 app.get("/admin/headers/types", (req, res) => {
   pool.query(`SELECT  DISTINCT content_type FROM headers WHERE content_type IS NOT NULL `, (err, results, fields) => {
+=======
+//ADMIN PIE CHART 3-C
+app.get("/admin/pie/application_javascript", (req, res) => {
+  pool.query(`SELECT
+              COUNT(CASE WHEN cache_control LIKE '%private%' THEN 1 END) AS private,
+              COUNT(CASE WHEN cache_control LIKE '%public%' THEN 1 END) AS public,
+              COUNT(CASE WHEN cache_control LIKE '%no-cache%' THEN 1 END) AS no_catch,
+              COUNT(CASE WHEN cache_control LIKE '%no-store%' THEN 1 END) AS no_store
+              FROM headers WHERE content_type LIKE '%application/javascript%' `, (err, results, fields) => {
+>>>>>>> Stashed changes
     if (err) throw err;
     //console.log(results.rows);
     res.send(results.rows)
   })
 })
 
+
+//ADMIN PIE CHART 3-C
+app.get("/admin/pie/font", (req, res) => {
+  pool.query(`SELECT
+              COUNT(CASE WHEN cache_control LIKE '%private%' THEN 1 END) AS private,
+              COUNT(CASE WHEN cache_control LIKE '%public%' THEN 1 END) AS public,
+              COUNT(CASE WHEN cache_control LIKE '%no-cache%' THEN 1 END) AS no_catch,
+              COUNT(CASE WHEN cache_control LIKE '%no-store%' THEN 1 END) AS no_store
+              FROM headers WHERE content_type LIKE '%font%' `, (err, results, fields) => {
+    if (err) throw err;
+
+    console.log( results.rows)
+    res.send(results.rows)
+    //console.log(results.rows)
+  })
+
+})
 
 
 //axreiasto alla mporei na volepsei ws texnikh gia na exoume se allo fakelo ta queries kai ta functions 

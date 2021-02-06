@@ -91,6 +91,26 @@ $(document).ready(function () {
   }).addTo(mymap);
 
 
+<<<<<<< Updated upstream
+=======
+  pieChartGet();
+  $("#link1").click(function(){
+    pieChartImage();
+  });
+
+  $("#application_javascript").click(function(){
+    pieChartJavascript();
+  });
+
+  $("#reset").click(function(){
+    pieChartGet();
+  });
+
+  $("#font").click(function(){
+    pieChartFont();
+  });
+
+>>>>>>> Stashed changes
 })
 
 
@@ -102,6 +122,7 @@ function headers_content() {
     url: "/admin/headers/types",
     success: function (result) {
       console.log(result)
+<<<<<<< Updated upstream
       for (let i = 0; i < result.length; i++) {
         if (result[i].content_type){
         console.log(result[i].content_type.indexOf('text/html') + result[i].content_type );
@@ -124,3 +145,96 @@ function headers_content() {
     }
   });
 }
+=======
+      //Reset mode 
+      if(window.chart){
+        window.chart.destroy();
+      }
+      getchart(result);
+
+    }
+  });
+}
+
+//GET pie chart for content type: image
+function pieChartImage() {
+  $.ajax({
+    type: "GET",
+    url: "/admin/pie/image",
+    success: function (result) {
+      window.chart.destroy();
+      getchart(result);
+    }
+  });
+}
+
+//GET pie chart for content type: application Javascript
+function pieChartJavascript() {
+  $.ajax({
+    type: "GET",
+    url: "/admin/pie/application_javascript",
+    success: function (result) {
+      window.chart.destroy();
+      getchart(result);
+    }
+  });
+}
+
+//GET pie chart for content type: font
+function pieChartFont() {
+  $.ajax({
+    type: "GET",
+    url: "/admin/pie/font",
+    success: function (result) {
+      window.chart.destroy();
+      getchart(result);
+    }
+  });
+}
+
+
+
+function getchart(result) {
+      var ctx = document.getElementById('myChart').getContext('2d');
+      window.chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'pie',
+
+        // The data for our dataset
+        data: {
+          labels: ['PRIVATE', 'PUBLIC', 'NO-CACHE', 'NO-STORE'],
+          datasets: [{
+            label: 'My First dataset',
+            backgroundColor: [
+              'rgba(33, 99, 255, 0.8)',
+              'rgba(11, 255, 11, 0.8)',
+              'rgba(245, 0, 253, 0.8)',
+              'rgba(112, 112, 112, 0.8)'
+            ],
+            borderColor: 'rgba(88, 88, 88, 0.2)',
+            data: [result[0].private, result[0].public, result[0].no_catch, result[0].no_store]
+          }]
+        },
+
+        // Configuration options go here
+        options: {
+          responsive: false
+        }
+      });
+}
+
+
+
+
+//NO USE
+function addData(chart, data) {
+  //chart.data.labels.push(label);
+  chart.data.datasets.forEach((dataset) => {
+    dataset.data.pop();
+  });
+  chart.data.datasets.forEach((dataset) => {
+      dataset.data.push(data);
+  });
+  chart.update();
+}
+>>>>>>> Stashed changes
