@@ -123,28 +123,35 @@ function headers_content() {
     success: function (result) {
       console.log(result)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+      
+>>>>>>> Stashed changes
       for (let i = 0; i < result.length; i++) {
         if (result[i].content_type){
-        console.log(result[i].content_type.indexOf('text/html') + result[i].content_type );
+          if(result[i].content_type.indexOf('text/html') !=-1){
+              console.log(result[i].content_type.indexOf('text/html') + result[i].content_type );
+              chart();
+          }
+          else if(result[i].content_type.indexOf('text/plain') !=-1){
+
+          }
+          else if(result[i].content_type.indexOf('text/json') !=-1){
+
+          }
+          else if(result[i].content_type.indexOf('application/json') !=-1){
+
+          }
+          else if(result[i].content_type.indexOf('text/html') !=-1){
+
+          }
+            
         }
       }
-      /*
-      const users = result;
-
-      var myIcon = L.icon({
-        iconUrl: "/human-icon.png",
-        iconSize: [38, 60]
-      });
-
-      for (var i = 0; i < result.length; i++) {
-        marker = new L.marker([result[i].geolat, result[i].geolong],
-          { icon: myIcon })
-          .addTo(mymap);
-      }
-      */
     }
   });
 }
+<<<<<<< Updated upstream
 =======
       //Reset mode 
       if(window.chart){
@@ -236,5 +243,16 @@ function addData(chart, data) {
       dataset.data.push(data);
   });
   chart.update();
+}
+>>>>>>> Stashed changes
+=======
+
+function chart(){
+  var ctx = document.getElementById('myChart');
+  var myBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: [20, 400],
+    
+});
 }
 >>>>>>> Stashed changes
