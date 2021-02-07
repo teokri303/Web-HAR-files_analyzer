@@ -24,12 +24,13 @@
 </head>
 
 <body>
+
     <% if (messages.success) { %>
         <div class="alert alert-success">
             <%= messages.success %>
         </div>
         <% } %>
-
+        <div class="main_content">
             <h1 style="text-align: center; margin: 50px;">This is the admin page analytics</h1>
             <table class="table">
                 <thead style="text-align: center;">
@@ -145,12 +146,16 @@
             </table>
 
 
-            <h3 style="text-align: center; margin-top: 30px;">IP'S MAP</h3>
-            <p style="text-align: center;">Location of IP's clients send HTTP requests</p>
-            <div id="mapid" style="height: 500px; width:auto; margin-top: 30px;"></div>
+           
             
             
             
+            
+            <div class="header_analysis">
+            <h2 style="text-align: center; margin-top: 30px;">HTTP Headers Analysis</h3>
+            <h3 style="text-align: center; margin-top: 15px;">Percentage of cachebility directives</h3>
+            <canvas id="myChart"  style="margin-top: 50px; "></canvas>
+
             <div class="dropdown">
                 <button class="dropbtn">Modify chart</button>
                 <div class="dropdown-content">
@@ -159,20 +164,21 @@
                     <a id="font">Font</a>
                     <a id="reset">Reset</a>
                 </div>
+            </div>    
             </div>
-            
-            
-            
-            
-            <canvas id="myChart" style="margin-top: 50px; height: fit-content; "></canvas>
 
+            <div class="chart-container" >
+            <h3 style="text-align: center; margin-top: 30px;">RESPONSE TIME ANALYSIS</h3>
             <canvas id="myChart2"></canvas>
+            </div>
 
 
-
-
-
-
+            
+            <h3 style="text-align: center; margin-top: 30px;">IP'S MAP</h3>
+            <p style="text-align: center;">Location of IP's clients send HTTP requests</p>
+            <div id="mapid" style="height: 500px; width:auto; margin-top: 30px;"></div>
+            
+        </div>
 
 
 

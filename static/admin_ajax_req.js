@@ -1,4 +1,3 @@
-
 //ADMIN MAP AJAX CALL
 $(document).ready(function () {
 
@@ -145,7 +144,7 @@ function pieChartImage() {
 function pieChartJavascript() {
   $.ajax({
     type: "GET",
-    url: "/admin/pie/application_javascript",
+    url: "/admin/pie/text_javascript",
     success: function (result) {
       window.chart.destroy();
       getchart(result);
@@ -167,7 +166,8 @@ function pieChartFont() {
 
 function getchart(result) {
   var ctx = document.getElementById('myChart').getContext('2d');
-
+  ctx.canvas.width = 500;
+  ctx.canvas.height = 350;
   window.chart = new Chart(ctx, {
     // The type of chart we want to create
     type: 'pie',
@@ -178,17 +178,17 @@ function getchart(result) {
       datasets: [{
         label: 'My First dataset',
         backgroundColor: [
-          'rgba(33, 99, 255, 0.8)',
-          'rgba(11, 255, 11, 0.8)',
-          'rgba(245, 0, 253, 0.8)',
-          'rgba(112, 112, 112, 0.8)'
+          'rgb(50, 205, 102)',
+          'rgb(50, 153, 205)',
+          'rgb(205, 50, 153)',
+          'rgb(205, 102, 50)'
         ],
         borderColor: 'rgba(88, 88, 88, 0.2)',
         data: [result[0].private, result[0].public, result[0].no_catch, result[0].no_store]
       }]
     },
 
-    // Configuration options go here
+    // Configuration options 
     options: {
       responsive:false
     }
@@ -378,6 +378,8 @@ $(document).ready(function () {
 
         
         var ctx = document.getElementById('myChart2').getContext('2d');
+        ctx.canvas.width = 500;
+        ctx.canvas.height = 350;
         var chart = new Chart(ctx, {
           // The type of chart we want to create
           type: 'bar',
@@ -391,7 +393,25 @@ $(document).ready(function () {
               borderColor: 'rgb(255, 99, 132)',
               data: dataset
             }]
+          },
+          options:{
+            responsive:false,
+            aspectRatio:1,
+            scales: {
+              xAxes: [{
+                  gridLines: {
+                      display:false,
+                  }
+              }],
+              yAxes: [{
+                  gridLines: {
+                      display:false,
+                  }   
+              }]
           }
+           
+          }
+          
         });
       }
     });

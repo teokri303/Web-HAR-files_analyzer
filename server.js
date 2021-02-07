@@ -205,7 +205,7 @@ app.post("/login/home", async (req, res) => {
   }
   //fail
   if (result.rowCount === 0) {
-    req.flash('error', 'Your username or password is wrong. ')
+    req.flash('error', 'Your username or password is wrong. ');
     res.redirect('/');
   }
   else {

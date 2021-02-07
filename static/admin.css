@@ -1,3 +1,10 @@
+
+.main_content {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .form-inner form .field input::placeholder{
     color: #999;
     transition: all 0.3s ease;
@@ -71,19 +78,28 @@
     padding: 16px;
     font-size: 16px;
     border: none;
+    
   }
   
+  
+  .header_analysis{
+    padding-top: 30px;
+    padding-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+  */
   .dropdown {
     position: relative;
     display: inline-block;
+    margin:auto;
   }
   
   .dropdown-content {
     display: none;
-    position: absolute;
+    position: relative;
     background-color: #f1f1f1;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
   }
   
@@ -94,8 +110,12 @@
     display: block;
   }
   
-  .dropdown-content a:hover {background-color: #ddd;}
+  .dropdown-content a:hover {background-color:  #4CAF50;}
   
   .dropdown:hover .dropdown-content {display: block;}
   
   .dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+  canvas{
+    margin: 0 auto;
+    }
