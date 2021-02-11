@@ -93,7 +93,7 @@
   .dropdown {
     position: relative;
     display: inline-block;
-    margin:auto;
+    margin: auto;
   }
   
   .dropdown-content {
@@ -101,6 +101,10 @@
     position: relative;
     background-color: #f1f1f1;
     z-index: 1;
+    width: 121.75px;
+    height: 216px;
+    margin: auto;
+    
   }
   
   .dropdown-content a {
