@@ -12,7 +12,7 @@ $(document).ready(function () {
       url: "/admin/map/users",
       success: function (result) {
         console.log("users success")
-        console.log(result)
+        //console.log(result)
         const users = result;
 
         var myIcon = L.icon({
@@ -34,7 +34,7 @@ $(document).ready(function () {
       type: "GET",
       url: "/admin/map/server",
       success: function (result) {
-        console.log("locations success")
+        
         console.log(result)
         var users_array = []
 
@@ -52,6 +52,8 @@ $(document).ready(function () {
             .addTo(mymap);
         }
 
+        console.log("locations success")
+
       }
     });
   }
@@ -61,13 +63,15 @@ $(document).ready(function () {
       type: "GET",
       url: "/admin/map/lines",
       success: function (result) {
-        console.log("lines info success")
+        
         console.log(result)
 
         for (var i = 0; i < result.length; i++) {
           var polyline = L.polyline([[result[i].geolat, result[i].geolong], [result[i].serverlat, result[i].serverlong]],
             { color: 'black' }).addTo(mymap);
         }
+
+        console.log("lines info success")
 
 
       }
@@ -121,7 +125,6 @@ function pieChartGet() {
       }
     });
 }
-
 
 //GET pie chart for content type: image
 function pieChartImage() {
@@ -246,12 +249,12 @@ $(document).ready(function () {
           }
 
         }
-        console.log(result)
+        //console.log(result)
         var sum = 0
         for (var i = 0; i < result.length; i++) {
           sum = sum + parseInt(result[i].cache_control);
         }
-        console.log(sum)
+        //console.log(sum)
         var waiting_time = ((sum / result.length) / 86400); //metatroph se meres 
         var avg_time = waiting_time.toFixed(0); //afairesh twn dekadikwn
         //console.log(avg_time + " days")
@@ -277,12 +280,12 @@ $(document).ready(function () {
           }
 
         }
-        console.log(result)
+        //console.log(result)
         var sum = 0
         for (var i = 0; i < result.length; i++) {
           sum = sum + parseInt(result[i].cache_control);
         }
-        console.log(sum)
+        //console.log(sum)
         var waiting_time = ((sum / result.length) / 86400); //metatroph se meres 
         var avg_time = waiting_time.toFixed(0); //afairesh twn dekadikwn
         //console.log(avg_time + " days")
@@ -308,12 +311,12 @@ $(document).ready(function () {
           }
 
         }
-        console.log(result)
+        //console.log(result)
         var sum = 0
         for (var i = 0; i < result.length; i++) {
           sum = sum + parseInt(result[i].cache_control);
         }
-        console.log(sum)
+        //console.log(sum)
         var waiting_time = ((sum / result.length) / 86400); //metatroph se meres 
         var avg_time = waiting_time.toFixed(0); //afairesh twn dekadikwn
         //console.log(avg_time + " days")
@@ -339,12 +342,12 @@ $(document).ready(function () {
           }
 
         }
-        console.log(result)
+        //console.log(result)
         var sum = 0
         for (var i = 0; i < result.length; i++) {
           sum = sum + parseInt(result[i].cache_control);
         }
-        console.log(sum)
+        //console.log(sum)
         var waiting_time = ((sum / result.length) / 86400); //metatroph se meres 
         var avg_time = waiting_time.toFixed(0); //afairesh twn dekadikwn
         //console.log(avg_time + " days")

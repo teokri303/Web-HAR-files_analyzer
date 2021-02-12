@@ -143,9 +143,21 @@ app.post("/register", async (req, res) => {
     errors.push({ message: "Please enter all fields" });
   }
 
-  if (password.length < 2) {
-    errors.push({ message: "Password must be a least 6 characters long" });
-  } // o kwdikos thelei prosthetous periorismous pou tha prostethoun meta gia na einai eukoles oi dokimes
+  if (password.length < 6) {
+    errors.push({ message: "Password must be a least 6 characters long." });
+  }
+  if (password.match(/[a-z]+/) == null){
+    errors.push({ message: "Passwords must contain at least a small letter." });
+  }
+  if (password.match(/[A-Z]+/) == null) {
+    errors.push({ message: "Passwords must contain at least one capital letter." });
+  }
+  if (password.match(/[0-9]+/) == null) {
+    errors.push({ message: "Passwords must contain at least one number." });
+  }
+  if (password.match(/[$@#&!]+/) == null) {
+    errors.push({ message: "Passwords must contain at least one symbol ($@#&!)" });
+  }
 
   if (password !== secpassword) {
     errors.push({ message: "Passwords do not match" });
@@ -157,8 +169,8 @@ app.post("/register", async (req, res) => {
     // Validation passed
     pool.query(
       `SELECT * FROM users
-          WHERE email = $1`,
-      [email],
+          WHERE email = $1 OR username = $2`,
+      [email, username],
       (err, results) => {
         if (err) {
           console.log(err);
@@ -166,7 +178,7 @@ app.post("/register", async (req, res) => {
         console.log(results.rows);
 
         if (results.rows.length > 0) {
-          req.flash('error', 'Email already in use');
+          req.flash('error', 'Email or username already in use');
           return res.render('signup');
 
         } else {
@@ -434,7 +446,7 @@ app.get('/admin/info/age/application',(req,res)=>{
     res.send(results.rows)
   });
 })
-//MESH HLIKIA ANA CONTENT-TYPE--IMAGE
+//MESH HLIKIA ANA CONTENT-TYPE--IMAGE 
 app.get('/admin/info/age/image',(req,res)=>{
   pool.query("SELECT cache_control FROM headers WHERE cache_control IS NOT NULL AND cache_control LIKE '%max-age%' AND content_type LIKE '%image%' ;", function (err, results) {
     if (err) throw err;
@@ -464,7 +476,7 @@ app.get('/admin/info/chart/info',(req,res)=>{
 
 //USER HEATMAP HANDLER
 app.get("/geo", (req, res) => {
-  pool.query(`SELECT serverlat, serverlong FROM entries WHERE har_id IN (SELECT har_id FROM har_files WHERE user_id IN (SELECT user_id FROM users WHERE username = $1))`, [req.session.username], (err, results, fields) => {
+  pool.query(`SELECT serverlat, serverlong FROM entries WHERE har_id IN (SELECT har_id FROM har_files WHERE user_id IN (SELECT user_id FROM users WHERE username = $1)) AND (serverlat, serverlong) IS NOT NULL;`, [req.session.username], (err, results, fields) => {
     if (err) throw err;
     //console.log(results.rows);
     res.send(results.rows)
@@ -472,7 +484,7 @@ app.get("/geo", (req, res) => {
 })
 //ADMIN MAP INFORMATION 1
 app.get("/admin/map/users", (req, res) => {
-  pool.query(`SELECT  DISTINCT geolat,geolong, user_id FROM har_files `, (err, results, fields) => {
+  pool.query(`SELECT  DISTINCT geolat,geolong, user_id FROM har_files WHERE (geolat,geolong) IS NOT NULL;`, (err, results, fields) => {
     if (err) throw err;
     //console.log(results.rows);
     res.send(results.rows)
@@ -483,7 +495,7 @@ app.get("/admin/map/server", (req, res) => {
   pool.query(`SELECT DISTINCT  entries.serverlat, entries.serverlong, users.user_id
               FROM ((entries
               INNER JOIN har_files ON har_files.har_id = entries.har_id)
-              INNER JOIN users ON users.user_id = har_files.user_id); `, (err, results, fields) => {
+              INNER JOIN users ON users.user_id = har_files.user_id) WHERE (entries.serverlat, entries.serverlong) IS NOT NULL; `, (err, results, fields) => {
     if (err) throw err;
     res.send(results.rows)
     //console.log(results.rows)
@@ -495,7 +507,7 @@ app.get("/admin/map/lines", (req, res) => {
   pool.query(`SELECT DISTINCT entries.serverlat, entries.serverlong, har_files.geolat, har_files.geolong, users.user_id
               FROM ((entries
               INNER JOIN har_files ON har_files.har_id = entries.har_id)
-              INNER JOIN users ON users.user_id = har_files.user_id); `, (err, results, fields) => {
+              INNER JOIN users ON users.user_id = har_files.user_id) WHERE (entries.serverlat, entries.serverlong, har_files.geolat, har_files.geolong) IS NOT NULL; `, (err, results, fields) => {
     if (err) throw err;
     res.send(results.rows)
     //console.log(results.rows)
@@ -510,10 +522,10 @@ app.get("/admin/pie/image", (req, res) => {
               COUNT(CASE WHEN cache_control LIKE '%public%' THEN 1 END) AS public,
               COUNT(CASE WHEN cache_control LIKE '%no-cache%' THEN 1 END) AS no_catch,
               COUNT(CASE WHEN cache_control LIKE '%no-store%' THEN 1 END) AS no_store
-              FROM headers WHERE content_type LIKE '%image%' `, (err, results, fields) => { //να βαλω ντροπνταουν μενου και καθε κουμπι να βγαζει και αναλογα αποτελεσματα ανα content type !!!!! ιδια querie πολλα ajax πανω σε κουμπια
+              FROM headers WHERE content_type LIKE '%image%' `, (err, results, fields) => { 
     if (err) throw err;
 
-    console.log(results.rows)
+    //console.log(results.rows)
     res.send(results.rows)
     //console.log(results.rows)
   })
