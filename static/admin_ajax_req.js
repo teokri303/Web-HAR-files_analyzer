@@ -1,7 +1,6 @@
 //ADMIN MAP AJAX CALL
 $(document).ready(function () {
 
-
   userLocationsGet();
   serverLocationsGet();
   getLinesInfo();
@@ -11,7 +10,6 @@ $(document).ready(function () {
       type: "GET",
       url: "/admin/map/users",
       success: function (result) {
-        console.log("users success")
         //console.log(result)
         const users = result;
 
@@ -63,15 +61,74 @@ $(document).ready(function () {
       type: "GET",
       url: "/admin/map/lines",
       success: function (result) {
-        
         console.log(result)
 
+        var weight = 1;
+        var geos = []
+        var max = 0;
+
         for (var i = 0; i < result.length; i++) {
+          geos.push([[result[i].geolat, result[i].geolong], [result[i].serverlat, result[i].serverlong]])
+          present = ([[result[i].geolat, result[i].geolong], [result[i].serverlat, result[i].serverlong]]);
+          var sum = 0;
+
+          for (var j = 0; j < result.length; j++) {
+            if(result[i].geolat == result[j].geolat && result[i].geolong == result[j].geolong && result[i].serverlat == result[j].serverlat && result[i].serverlong == result[j].serverlong){
+              sum = sum +1;
+            }
+          }
+          
+          if(sum < 10){
+            weight = 0.5
+          }
+          else if(sum >= 10 && sum < 20){
+            weight = 1
+          }
+          else if(sum >= 20 && sum < 30){
+            weight = 1.5
+          }
+          else if(sum >= 30 && sum < 40){
+            weight = 2
+          }
+          else if(sum >= 40 && sum < 50){
+            weight = 2.5
+          }
+          else if(sum >= 50 && sum < 60){
+            weight = 3
+          }
+          else if(sum >= 60 && sum < 70){
+            weight = 3.5
+          }
+          else if(sum >= 70 && sum < 80){
+            weight = 4
+          }
+          else if(sum >= 80 && sum < 90){
+            weight = 4.5
+          }
+          else if(sum >= 90 && sum < 100){
+            weight = 5
+          }
+          else if(sum >= 100 && sum < 110){
+            weight = 5.5
+          }
+          else if(sum >= 110 && sum < 120){
+            weight = 6
+          }
+          else if(sum >= 120 && sum < 130){
+            weight = 7
+          }
+          else{
+            weight = 8
+          }
+          
+        
+
           var polyline = L.polyline([[result[i].geolat, result[i].geolong], [result[i].serverlat, result[i].serverlong]],
-            { color: 'black' }).addTo(mymap);
+            { color: 'black', weight:weight}).addTo(mymap);
         }
 
         console.log("lines info success")
+        
 
 
       }
@@ -88,7 +145,8 @@ $(document).ready(function () {
       'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     id: 'mapbox/streets-v11',
     tileSize: 513,
-    zoomOffset: -1
+    zoomOffset: -1,
+
   }).addTo(mymap);
 
 
@@ -108,6 +166,7 @@ $(document).ready(function () {
   $("#font").click(function(){
     pieChartFont();
   });
+
 
 })
 
@@ -197,6 +256,65 @@ function getchart(result) {
     }
   });
 }
+
+$(document).ready(function () {
+  
+  getUsersNumber();
+  getInternerProvidersNumber();
+  getResponseStatusCount();
+  getMethodStatusCount();
+
+  function getUsersNumber() {
+    $.ajax({
+      type: "GET",
+      url: "/admin/info/users/count",
+      success: function (result) {
+        //console.log(result)
+        $('#user_count').append(result);
+      }
+    });
+  }
+  function getInternerProvidersNumber() {
+    $.ajax({
+      type: "GET",
+      url: "/admin/info/providers/count",
+      success: function (result) {
+        //console.log(result)
+        $('#host_count').append(result)
+      }
+    });
+  }
+  function getMethodStatusCount() {
+    $.ajax({
+      type: "GET",
+      url: "/admin/info/methods/count",
+      success: function (result) {
+        //console.log(result) 
+        for(var i=0; i<result.length; i++){
+          $('#methods_head').append("<th>" + result[i].method + "</th>")
+          $('#methods_body').append("<td>" + result[i].count + "</td>")
+        }
+      }
+    });
+  }
+  function getResponseStatusCount() {
+    $.ajax({
+      type: "GET",
+      url: "/admin/info/response/count",
+      success: function (result) {
+        //console.log(result)
+        for(var i=0; i<result.length; i++){
+          $('#response_status_head').append("<th>" + result[i].status + "</th>")
+          $('#response_status_body').append("<td>" + result[i].count + "</td>")
+        }
+
+      }
+    });
+  }
+});
+
+
+
 
 //NO USE
 function addData(chart, data) {
