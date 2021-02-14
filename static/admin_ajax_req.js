@@ -33,7 +33,7 @@ $(document).ready(function () {
       url: "/admin/map/server",
       success: function (result) {
         
-        console.log(result)
+        //console.log(result)
         var users_array = []
 
         for (var i = 0; i < result.length; i++) {
@@ -49,9 +49,6 @@ $(document).ready(function () {
           marker = new L.marker([result[i].serverlat, result[i].serverlong])
             .addTo(mymap);
         }
-
-        console.log("locations success")
-
       }
     });
   }
@@ -61,7 +58,7 @@ $(document).ready(function () {
       type: "GET",
       url: "/admin/map/lines",
       success: function (result) {
-        console.log(result)
+        //console.log(result)
 
         var weight = 1;
         var geos = []
@@ -126,11 +123,6 @@ $(document).ready(function () {
           var polyline = L.polyline([[result[i].geolat, result[i].geolong], [result[i].serverlat, result[i].serverlong]],
             { color: 'black', weight:weight}).addTo(mymap);
         }
-
-        console.log("lines info success")
-        
-
-
       }
     });
   }
@@ -185,7 +177,7 @@ function pieChartGet() {
     });
 }
 
-//GET pie chart for content type: image
+//GET PIE chart for content type: image
 function pieChartImage() {
   $.ajax({
     type: "GET",
@@ -202,7 +194,7 @@ function pieChartImage() {
   });
 }
 
-//GET pie chart for content type: application Javascript
+//GET PIE chart for content type: application Javascript
 function pieChartJavascript() {
   $.ajax({
     type: "GET",
@@ -214,7 +206,7 @@ function pieChartJavascript() {
   });
 }
 
-//GET pie chart for content type: font
+//GET PIE chart for content type: font
 function pieChartFont() {
   $.ajax({
     type: "GET",
@@ -257,6 +249,7 @@ function getchart(result) {
   });
 }
 
+//OTHER ADMIN INFORMATION ANALYSIS GET
 $(document).ready(function () {
   
   getUsersNumber();
@@ -327,7 +320,6 @@ function addData(chart, data) {
   });
   chart.update();
 }
-
 
 
 //AVERAGE AGE OF WEB OBJECT PER CONTENT TYPE
@@ -479,16 +471,27 @@ $(document).ready(function () {
 
 })
 
-
+//CHART 2 
 $(document).ready(function () {
   chartInfo();
+  
+
+
+  //EDW EINAI TO HANDLER GIA TO SUMBIT TWN CKECKBOXES POY FERNEI MESA OLES TIS TIMES SOY TA BGAZEI OLA STIN CONSOLA AUTA POY PAIRNEIS KAI EXEIS NA DIAXEIRISTEIS DEN KSERO AN PREPEI NA EINAI EDW H NA EINAI MESA STO CHART INFO APO KATW EPISIS RPEPEI PRWTA NA TA LAMVANEI OLA MAZI TO CHART KAI META NA PARAMETROPOIEITE OPOTE PREPEI KAPVW NA ALLAKSOYN SEIRA TA FUNCTION
+  $('#chart_2_submit').on('click', function() {
+    parameters = $('#chart_2_conf').serializeArray();
+    console.log(parameters);
+  
+    return false; // Prevent the submition of the form
+  });
+
 
   function chartInfo() {
     $.ajax({
       type: "GET",
       url: "/admin/info/chart/info",
       success: function (result) {
-        //console.log(result)
+        console.log(result)
         var xLabels = []
         var dataset = []
         for (var i =0; i< result.length; i++){

@@ -375,7 +375,7 @@ app.post("/upload/har", async (req, res) => {
           throw err;
         }
       })
-    pool.query(`INSERT INTO headers (content_type, cache_control, pragma, last_modified, host, age, expires, res_id) VALUES ($1, $2, $3, $4, $5, $6, $7, (SELECT MAX(response_id) FROM response))`,
+    pool.query(`INSERT INTO headers (content_type, cache_control, pragma, last_modified, host, age, expires, res_id, en_id) VALUES ($1, $2, $3, $4, $5, $6, $7, (SELECT MAX(response_id) FROM response),(SELECT MAX(entries_id) FROM entries))`,
       [data.log.entries[i].response.headers.content_type,
       data.log.entries[i].response.headers.cache_control,
       data.log.entries[i].response.headers.pragma,
@@ -390,7 +390,7 @@ app.post("/upload/har", async (req, res) => {
         }
       })
 
-    pool.query(`INSERT INTO headers (content_type, cache_control, pragma, last_modified, host, age, expires, req_id) VALUES ($1, $2, $3, $4, $5, $6, $7,(SELECT MAX(request_id) FROM request))`,
+    pool.query(`INSERT INTO headers (content_type, cache_control, pragma, last_modified, host, age, expires, req_id, en_id) VALUES ($1, $2, $3, $4, $5, $6, $7,(SELECT MAX(request_id) FROM request),(SELECT MAX(entries_id) FROM entries))`,
       [data.log.entries[i].request.headers.content_type,
       data.log.entries[i].request.headers.cache_control,
       data.log.entries[i].request.headers.pragma,
@@ -454,14 +454,23 @@ app.get('/admin/info/age/text',(req,res)=>{
   });
 })
 
-//CHART 2 TIMIMNGS
-app.get('/admin/info/chart/info',(req,res)=>{
+//CHART 2 TIMIMNGS AYTO EINAI AYTO POY EIXAME PRIN POY KANEI AVERAGE TA TIMINGS KAI SETAREI GIA TA PANTA OLA XWRIS PARAMETROPOIEIS... TVRA EINAI ANENERGO GIAIT TOY EBGALA THN KATALHKSI WSTE NA KANW TEST ME TO APO KATW
+app.get('/admin/info/chart',(req,res)=>{
   pool.query("SELECT EXTRACT(hour FROM starteddatetime), AVG(timings) FROM entries GROUP BY EXTRACT(hour FROM starteddatetime) ORDER BY EXTRACT(hour FROM starteddatetime) ASC   ", function (err, results) {
     if (err) throw err;
     console.log(results.rows)
     res.send(results.rows)
   });
 })
+// AYTO EINAI POY PARINEI OLA TA DEDOMENA GIA TO CHART 2 TA PANTA WSTE NA FILTRARISTOYN META 
+app.get('/admin/info/chart/info',(req,res)=>{
+  pool.query("SELECT EXTRACT(hour FROM starteddatetime) AS time, EXTRACT(dow FROM starteddatetime) AS day, method, content_type, timings FROM entries INNER JOIN request ON entries.entries_id = request.en_id  INNER JOIN headers ON headers.en_id = entries.entries_id WHERE headers.content_type IS NOT NULL ", function (err, results) {
+    if (err) throw err;
+    //console.log(results.rows)
+    res.send(results.rows)
+  });
+})
+
 
 
 
@@ -505,7 +514,6 @@ app.get("/admin/map/lines", (req, res) => {
   })
 
 })
-
 //ADMIN PIE CHART 3-C
 app.get("/admin/pie/image", (req, res) => {
   pool.query(`SELECT
@@ -522,12 +530,6 @@ app.get("/admin/pie/image", (req, res) => {
   })
 
 })
-
-
-
-
-
-
 //ADMIN PIE CHART 3-C
 app.get("/admin/pie", (req, res) => {
   pool.query(`SELECT
@@ -544,7 +546,6 @@ app.get("/admin/pie", (req, res) => {
   })
 
 })
-
 //ADMIN PIE CHART 3-C
 app.get("/admin/pie/font", (req, res) => {
   pool.query(`SELECT
@@ -561,7 +562,6 @@ app.get("/admin/pie/font", (req, res) => {
   })
 
 })
-
 //ADMIN PIE CHART 3-C
 app.get("/admin/pie/text_javascript", (req, res) => {
   pool.query(`SELECT
