@@ -18,7 +18,6 @@
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
     <script src="/admin_ajax_req.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -145,6 +144,7 @@
                             <canvas id="myChart2"></canvas>
                         </div>
 
+
                         <div>
                             <form id="chart_2_conf" style="display: inline-block;">
                                 <div style="display: inline-block;">
@@ -188,6 +188,55 @@
                             </form>
                         </div>
 
+
+
+                <button class="dropbtn">Modify chart</button>
+                <div class="dropdown-content">
+                    <a id="pie_image">Image</a>
+                    <a id="pie_application_javascript">Javascript</a>
+                    <a id="pie_font">Font</a>
+                    <a id="pie_reset">Reset</a>
+                </div>
+            </div>    
+            
+
+            <div class="chart-container" >
+            <h3 style="text-align: center; margin-top: 30px;">RESPONSE TIME ANALYSIS (ms)</h3>
+            <canvas id="myChart2"></canvas>
+            <div class="dropdown">
+
+                <button class="dropbtn">Modify chart</button>
+                <div class="dropdown-content">
+                    <a id="bar_image">Image</a>
+                    <a id="bar_application_javascript">Javascript</a>
+                    <a id="bar_font">Font</a>
+                    <a id="bar_reset">Reset</a>
+                </div>
+            </div>  
+            </div>
+
+            <div class="chart-container" >
+                <h3 style="text-align: center; margin-top: 30px;">TTL</h3>
+                <canvas id="Chart_TTL"></canvas>
+                <h4>TTL Filter</h4>
+                <label class="container">All
+                <input type="checkbox" id="ttl_all">
+                <span class="checkmark"></span>
+                </label>
+                <label class="container">Image 
+                <input type="checkbox" id="ttl_image">
+                <span class="checkmark"></span>
+                </label>
+                <label class="container">Javascript
+                <input type="checkbox" id="ttl_javascript">
+                <span class="checkmark"></span>
+                </label>
+                <label class="container" >Font
+                <input type="checkbox" id="ttl_font">
+                <span class="checkmark"></span>
+                </label>
+
+            </div>
 
 
 

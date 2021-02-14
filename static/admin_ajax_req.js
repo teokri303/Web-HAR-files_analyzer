@@ -143,19 +143,19 @@ $(document).ready(function () {
 
 
   pieChartGet();
-  $("#link1").click(function () {
+  $("#pie_image").click(function () {
     pieChartImage();
   });
-  $("#reset").click(function () {
+  $("#pie_reset").click(function () {
     pieChartGet();
   });
 
-  $("#application_javascript").click(function(){
+  $("#pie_application_javascript").click(function(){
     pieChartJavascript();
   });
 
 
-  $("#font").click(function(){
+  $("#pie_font").click(function(){
     pieChartFont();
   });
 
@@ -331,145 +331,318 @@ $(document).ready(function () {
   ageOfElements_image();
   ageOfElements_text();
 
-
-  function uniqueDomainsGet() {
-    $.ajax({
-      type: "GET",
-      url: "/admin/info/domains",
-      success: function (result) {
-        //console.log(result[0].count)
-
-        $('#domains_col').append(result[0].count);
-
-      }
-    });
+  chartInfo();
+  waitForElement();
+  //chartTTL();
+  function waitForElement(){
+    if(typeof window.all_age !== "undefined"){
+      var dataset = []
+      var label = []
+      var backgroundColor = []
+      dataset.push(window.all_age);
+      label.push('Age All');  
+      backgroundColor.push('rgb(50, 205, 102)');
+      chartTTL(dataset, label, backgroundColor);
+    }
+    else{
+        setTimeout(waitForElement, 250);
+    }
   }
-
-  function ageOfElements_all() {
-    $.ajax({
-      type: "GET",
-      url: "/admin/info/age",
-      success: function (result) {
-        for (var i = 0; i < result.length; i++) {
-          if (result[i].cache_control.indexOf(',') == -1 || result[i].cache_control.indexOf(',') > 5) {
-            result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf('=') + 10);
-          }
-          if ((result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('='))) > 0) {
-            result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('=')));
-          }
-
-        }
-        //console.log(result)
-        var sum = 0
-        for (var i = 0; i < result.length; i++) {
-          sum = sum + parseInt(result[i].cache_control);
-        }
-        //console.log(sum)
-        var waiting_time = ((sum / result.length) / 86400); //metatroph se meres 
-        var avg_time = waiting_time.toFixed(0); //afairesh twn dekadikwn
-        //console.log(avg_time + " days")
-
-        $('#avg_all').append(avg_time + " days");
-
-
-      }
-    });
-  }
-
-  function ageOfElements_application() {
-    $.ajax({
-      type: "GET",
-      url: "/admin/info/age/application",
-      success: function (result) {
-        for (var i = 0; i < result.length; i++) {
-          if (result[i].cache_control.indexOf(',') == -1 || result[i].cache_control.indexOf(',') > 5) {
-            result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf('=') + 10);
-          }
-          if ((result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('='))) > 0) {
-            result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('=')));
-          }
-
-        }
-        //console.log(result)
-        var sum = 0
-        for (var i = 0; i < result.length; i++) {
-          sum = sum + parseInt(result[i].cache_control);
-        }
-        //console.log(sum)
-        var waiting_time = ((sum / result.length) / 86400); //metatroph se meres 
-        var avg_time = waiting_time.toFixed(0); //afairesh twn dekadikwn
-        //console.log(avg_time + " days")
-
-        $('#avg_app').append(avg_time + " days");
-
-
-      }
-    });
-  }
-
-  function ageOfElements_image() {
-    $.ajax({
-      type: "GET",
-      url: "/admin/info/age/image",
-      success: function (result) {
-        for (var i = 0; i < result.length; i++) {
-          if (result[i].cache_control.indexOf(',') == -1 || result[i].cache_control.indexOf(',') > 5) {
-            result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf('=') + 10);
-          }
-          if ((result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('='))) > 0) {
-            result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('=')));
-          }
-
-        }
-        //console.log(result)
-        var sum = 0
-        for (var i = 0; i < result.length; i++) {
-          sum = sum + parseInt(result[i].cache_control);
-        }
-        //console.log(sum)
-        var waiting_time = ((sum / result.length) / 86400); //metatroph se meres 
-        var avg_time = waiting_time.toFixed(0); //afairesh twn dekadikwn
-        //console.log(avg_time + " days")
-
-        $('#avg_image').append(avg_time + " days");
-
-
-      }
-    });
-  }
-
-  function ageOfElements_text() {
-    $.ajax({
-      type: "GET",
-      url: "/admin/info/age/text",
-      success: function (result) {
-        for (var i = 0; i < result.length; i++) {
-          if (result[i].cache_control.indexOf(',') == -1 || result[i].cache_control.indexOf(',') > 5) {
-            result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf('=') + 10);
-          }
-          if ((result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('='))) > 0) {
-            result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('=')));
-          }
-
-        }
-        //console.log(result)
-        var sum = 0
-        for (var i = 0; i < result.length; i++) {
-          sum = sum + parseInt(result[i].cache_control);
-        }
-        //console.log(sum)
-        var waiting_time = ((sum / result.length) / 86400); //metatroph se meres 
-        var avg_time = waiting_time.toFixed(0); //afairesh twn dekadikwn
-        //console.log(avg_time + " days")
-
-        $('#avg_text').append(avg_time + " days");
-
-
-      }
-    });
-  }
-
+  
 })
+
+
+function chartInfo() {
+  $.ajax({
+    type: "GET",
+    url: "/admin/info/chart/info",
+    success: function (result) {
+      //console.log(result)
+      var xLabels = []
+      var dataset = []
+      var backgroundColor = ['rgb(255, 99, 132)', 'rgb(154, 205, 50)']
+      for (var i =0; i< result.length; i++){
+        dataset.push(result[i].avg)
+        xLabels.push(result[i].date_part + ":00")
+        
+      }
+
+      
+      var ctx_bar = document.getElementById('myChart2').getContext('2d');
+      ctx_bar.canvas.width = 500;
+      ctx_bar.canvas.height = 350;
+      var chart_bar = new Chart(ctx_bar, {
+        // The type of chart we want to create
+        type: 'bar',
+
+        // The data for our dataset
+        data: {
+          labels: xLabels,
+          datasets: [{
+            label: 'Timings',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: dataset
+          }]
+        },
+        options:{
+          responsive:false,
+          aspectRatio:1,
+          scales: {
+            xAxes: [{
+                gridLines: {
+                    display:false,
+                }
+            }],
+            yAxes: [{
+                gridLines: {
+                    display:false,
+                }   
+            }]
+        }
+         
+        }
+        
+      });
+    }
+  });
+}
+
+
+
+function chartTTL(data,label,backgroundColor) {
+      /*
+      var xLabels = []
+      var dataset = []
+      for (var i =0; i< data.length; i++){
+        dataset.push(data)
+        xLabels.push(label)
+        
+      }
+      */
+      console.log("dataset:" + data)
+      console.log("xlabels" + label)
+     //var xLabels = []
+     //xLabels.push(label)
+     //var dataset = []
+     //dataset.push(data);
+      var ctx_bar = document.getElementById('Chart_TTL').getContext('2d');
+      ctx_bar.canvas.width = 500;
+      ctx_bar.canvas.height = 350;
+      
+      window.chart_bar = new Chart(ctx_bar, {
+        // The type of chart we want to create
+        type: 'bar',
+        // The data for our dataset
+        data: {
+          labels: label,
+          datasets: [{
+            label: 'TTL',
+            backgroundColor: backgroundColor,
+            data: data
+          }
+        ]
+        },
+        options:{
+          responsive:false,
+          aspectRatio:1,
+          legend:{display:false},
+          scales: {
+            xAxes: [{
+                gridLines: {
+                    display:false,
+                }
+            },
+          ],
+            yAxes: [{
+                gridLines: {
+                    display:false,
+                },
+                ticks:{
+                  min:0
+                }   
+            }]
+        }
+        }
+        
+      });
+ 
+}
+
+
+function avg_time(result){
+  for (var i = 0; i < result.length; i++) {
+    //console.log("Result" + i +"before: " + result[i].cache_control);
+    if (result[i].cache_control.indexOf(',') == -1 || result[i].cache_control.indexOf(',') > 5) {
+      result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf('=') + 10);
+      //console.log("Result" + i +"after: " + result[i].cache_control);
+    }
+    if ((result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('='))) > 0) {
+      result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('=')));
+      //console.log("Result" + i +"after: " + result[i].cache_control);
+    }
+
+  }
+  //console.log(result)
+  var sum = 0
+  for (var i = 0; i < result.length; i++) {
+    sum = sum + parseInt(result[i].cache_control);
+  }
+  //console.log(sum)
+  var waiting_time = ((sum / result.length) / 86400); //metatroph se meres 
+  var avg_time = waiting_time.toFixed(0); //afairesh twn dekadikwn
+  //console.log(avg_time + " days")
+  return avg_time;
+}
+
+
+function uniqueDomainsGet() {
+  $.ajax({
+    type: "GET",
+    url: "/admin/info/domains",
+    success: function (result) {
+      //console.log(result[0].count)
+
+      $('#domains_col').append(result[0].count);
+
+    }
+  });
+}
+
+function ageOfElements_all() {
+  $.ajax({
+    type: "GET",
+    url: "/admin/info/age",
+    success: function (result) {
+      window.all_age = avg_time(result);
+      $('#avg_all').append(avg_time(result) + " days");
+    }
+  });
+}
+
+function ageOfElements_application() {
+  $.ajax({
+    type: "GET",
+    url: "/admin/info/age/application",
+    success: function (result) {
+      window.app_age = avg_time(result); 
+      $('#avg_app').append(avg_time(result) + " days");
+    }
+  });
+}
+
+function ageOfElements_image() {
+  $.ajax({
+    type: "GET",
+    url: "/admin/info/age/image",
+    success: function (result) {
+      window.image_age = avg_time(result);
+      $('#avg_image').append(avg_time(result) + " days");
+    }
+  });
+}
+
+function ageOfElements_text() {
+  $.ajax({
+    type: "GET",
+    url: "/admin/info/age/text",
+    success: function (result) {
+      window.text_age = avg_time(result);
+      $('#avg_text').append(avg_time(result) + " days");
+    }
+  });
+}
+
+/* TTL CHECKBOX FILTERING */
+/* WHEN PAGE IS LOADED, GET CHECKBOX'S ELEMENTS */
+document.addEventListener("DOMContentLoaded", function() {
+  var ttl_all = document.getElementById('ttl_all');
+  ttl_all.checked = true;
+  console.log(ttl_all.checked); 
+  var ttl_image = document.getElementById('ttl_image');
+  var ttl_javascript = document.getElementById('ttl_javascript');
+  var ttl_font = document.getElementById('ttl_font');
+  /*TTL ALL BUTTON ACTION*/
+  ttl_all.addEventListener('change', (event) => {
+    window.chart_bar.destroy();
+    isChecked();
+  });
+  /*TTL IMAGE BUTTON ACTION*/
+  ttl_image.addEventListener('change', (event) => {
+    ttl_all.checked = false;
+    window.chart_bar.destroy();
+    isChecked();
+  });
+
+  ttl_javascript.addEventListener('change', (event) => {
+    ttl_all.checked = false;
+    window.chart_bar.destroy();
+    isChecked();
+  });
+
+  ttl_font.addEventListener('change', (event) => {
+    ttl_all.checked = false;
+    window.chart_bar.destroy();
+    isChecked();
+  });
+});
+
+
+window.addEventListener('DOMContentLoaded', (event) => {
+  
+});
+  
+function isChecked(){
+  var dataset = []
+  var label = []
+  var backgroundColor = []
+  if(ttl_all.checked == true){
+    window.chart_bar.destroy();
+    dataset.push(window.all_age);
+    label.push('Age all');
+    backgroundColor.push('rgb(50, 205, 102)');
+    ttl_image.checked = false;
+    ttl_javascript.checked = false;
+    ttl_font.checked = false;
+    //chartTTL(window.all_age);
+  }
+  if(ttl_image.checked == true){
+    window.chart_bar.destroy();
+    dataset.push(window.image_age);
+    label.push('Image');
+    backgroundColor.push('rgb(50, 153, 205)');
+    //chartTTL(window.image_age);
+    }
+  if(ttl_font.checked == true){
+      window.chart_bar.destroy();
+      dataset.push(window.text_age);
+      label.push('Age font');
+      backgroundColor.push('rgb(205, 50, 153)');
+      //chartTTL(window.text_age);
+  }
+  if(ttl_javascript.checked == true){
+    window.chart_bar.destroy();
+    dataset.push(app_age);
+    label.push('Age Javascript');
+    backgroundColor.push('rgb(205, 102, 50)');
+    //chartTTL(window.app_age);
+}
+  console.log(dataset);
+  chartTTL(dataset,label,backgroundColor);
+}
+
+
+/*
+'rgb(50, 205, 102)',
+          'rgb(50, 153, 205)',
+          'rgb(205, 50, 153)',
+          'rgb(205, 102, 50)'
+*/
+
+
+
+
+
 
 //CHART 2 
 $(document).ready(function () {
@@ -499,46 +672,7 @@ $(document).ready(function () {
           xLabels.push(result[i].date_part + ":00")
           
         }
-
-        
-        var ctx = document.getElementById('myChart2').getContext('2d');
-        ctx.canvas.width = 500;
-        ctx.canvas.height = 350;
-        var chart = new Chart(ctx, {
-          // The type of chart we want to create
-          type: 'bar',
-
-          // The data for our dataset
-          data: {
-            labels: xLabels,
-            datasets: [{
-              label: 'My First dataset',
-              backgroundColor: 'rgb(255, 99, 132)',
-              borderColor: 'rgb(255, 99, 132)',
-              data: dataset
-            }]
-          },
-          options:{
-            responsive:false,
-            aspectRatio:1,
-            scales: {
-              xAxes: [{
-                  gridLines: {
-                      display:false,
-                  }
-              }],
-              yAxes: [{
-                  gridLines: {
-                      display:false,
-                  }   
-              }]
-          }
-           
-          }
-          
-        });
       }
-    });
+    })
   }
-
-}) 
+})  
