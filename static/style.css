@@ -8,9 +8,9 @@
 html,body{
   display:grid;
   height: 100%;
-  width: 100%;
+  width: 80%;
   place-items: center;
-  background: -webkit-linear-gradient(left, #629fc2, #575153);
+  margin: auto;
 }
 p,.greeding {
   font-size: 20px;
@@ -109,6 +109,7 @@ form .btn{
   border-radius: 5px;
   position: relative;
   overflow: hidden;
+  
 }
 form .btn .btn-layer{
   height: 100%;

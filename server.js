@@ -454,17 +454,9 @@ app.get('/admin/info/age/text',(req,res)=>{
   });
 })
 
-//CHART 2 TIMIMNGS AYTO EINAI AYTO POY EIXAME PRIN POY KANEI AVERAGE TA TIMINGS KAI SETAREI GIA TA PANTA OLA XWRIS PARAMETROPOIEIS... TVRA EINAI ANENERGO GIAIT TOY EBGALA THN KATALHKSI WSTE NA KANW TEST ME TO APO KATW
-app.get('/admin/info/chart',(req,res)=>{
-  pool.query("SELECT EXTRACT(hour FROM starteddatetime), AVG(timings) FROM entries GROUP BY EXTRACT(hour FROM starteddatetime) ORDER BY EXTRACT(hour FROM starteddatetime) ASC   ", function (err, results) {
-    if (err) throw err;
-    console.log(results.rows)
-    res.send(results.rows)
-  });
-})
-// AYTO EINAI POY PARINEI OLA TA DEDOMENA GIA TO CHART 2 TA PANTA WSTE NA FILTRARISTOYN META 
+
 app.get('/admin/info/chart/info',(req,res)=>{
-  pool.query("SELECT EXTRACT(hour FROM starteddatetime) AS time, EXTRACT(dow FROM starteddatetime) AS day, method, content_type, timings FROM entries INNER JOIN request ON entries.entries_id = request.en_id  INNER JOIN headers ON headers.en_id = entries.entries_id WHERE headers.content_type IS NOT NULL ", function (err, results) {
+  pool.query("SELECT EXTRACT(hour FROM starteddatetime) AS time, EXTRACT(dow FROM starteddatetime) AS day, method, content_type, timings FROM entries INNER JOIN request ON entries.entries_id = request.en_id  INNER JOIN headers ON headers.en_id = entries.entries_id WHERE headers.content_type IS NOT NULL ORDER BY EXTRACT(hour FROM starteddatetime) ASC ", function (err, results) {
     if (err) throw err;
     //console.log(results.rows)
     res.send(results.rows)

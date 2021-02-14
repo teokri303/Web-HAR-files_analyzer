@@ -29,6 +29,8 @@
             <%= messages.success %>
         </div>
         <% } %>
+
+        <button class="dropbtn" style="margin-top: 0px; position:absolute; top:0; right:0; "  ><a class="btn" href="http://localhost:3000"> Log-Out</a></button>
             <div class="main_content">
                 <h1 style="text-align: center; margin: 50px;">This is the admin page analytics</h1>
                 <table class="table">
@@ -131,17 +133,17 @@
 
                             <button class="dropbtn">Modify chart</button>
                             <div class="dropdown-content">
-                                <a id="link1">Image</a>
-                                <a id="application_javascript">Javascript</a>
-                                <a id="font">Font</a>
-                                <a id="reset">Reset</a>
+                                <a id="pie_image">Image</a>
+                                <a id="pie_application_javascript">Javascript</a>
+                                <a id="pie_font">Font</a>
+                                <a id="pie_reset">Reset</a>
                             </div>
                         </div>
-
+                        <hr>
 
                         <div class="chart-container">
-                            <h3 style="text-align: center; margin-top: 30px;">RESPONSE TIME ANALYSIS (ms)</h3>
-                            <canvas id="myChart2"></canvas>
+                            <h3 style="text-align: center; margin-top: 100px;">RESPONSE TIME ANALYSIS (ms)</h3>
+                            <canvas id="myChart2_configurations"></canvas>
                         </div>
 
 
@@ -149,76 +151,57 @@
                             <form id="chart_2_conf" style="display: inline-block;">
                                 <div style="display: inline-block;">
                                     <p style="text-align: center;">METHODS</p>
-                                    <input type="checkbox" id="get_method" name="method1" value="GET">
+                                    <input type="checkbox"  name="method" value="GET">
                                     <label for="method1"> GET</label><br>
-                                    <input type="checkbox" id="post_method" name="method2" value="POST">
+                                    <input type="checkbox"  name="method" value="POST">
                                     <label for="method2"> POST</label><br>
-                                    <input type="checkbox" id="options_method" name="method3" value="OPTIONS">
+                                    <input type="checkbox"  name="method" value="OPTIONS">
                                     <label for="method3"> OPTIONS</label><br><br><br><br><br><br>
                                 </div>
-                                <div style="display: inline-block;">
+                                <div style="display: inline-block; margin: 10px;">
                                     <p style="text-align: center;">DAYS</p>
-                                    <input type="checkbox" id="get_method" name="day1" value="Monday">
+                                    <input type="checkbox"  name="day" value="1">
                                     <label for="day"> Monday</label><br>
-                                    <input type="checkbox" id="post_method" name="day2" value="Tuesday">
+                                    <input type="checkbox"  name="day" value="2">
                                     <label for="day"> Tuesday</label><br>
-                                    <input type="checkbox" id="options_method" name="day3" value="Wednesday">
+                                    <input type="checkbox"  name="day" value="3">
                                     <label for="day"> Wednesday</label><br>
-                                    <input type="checkbox" id="options_method" name="day4" value="Thursday">
+                                    <input type="checkbox"  name="day" value="4">
                                     <label for="day"> Thursday</label><br>
-                                    <input type="checkbox" id="options_method" name="day5" value="Friday">
+                                    <input type="checkbox"  name="day" value="5">
                                     <label for="day"> Friday</label><br>
-                                    <input type="checkbox" id="options_method" name="day6" value="Saturday">
+                                    <input type="checkbox"  name="day" value="6">
                                     <label for="day"> Saturday</label><br>
-                                    <input type="checkbox" id="options_method" name="day7" value="Sunday">
+                                    <input type="checkbox"  name="day" value="0">
                                     <label for="day"> Sunday</label><br><br>
                                 </div>
                                 <div style="display: inline-block;">
                                     <p style="text-align: center;">CONTENT_TYPE</p>
-                                    <input type="checkbox" id="get_method" name="type1" value="Application">
+                                    <input type="checkbox"  name="type" value="Application">
                                     <label for="type1"> Application</label><br>
-                                    <input type="checkbox" id="post_method" name="type2" value="Image">
+                                    <input type="checkbox"  name="type" value="Image">
                                     <label for="type2"> Image</label><br>
-                                    <input type="checkbox" id="options_method" name="type3" value="Text">
+                                    <input type="checkbox"  name="type" value="Text">
                                     <label for="type3"> Text</label><br>
-                                    <input type="checkbox" id="options_method" name="type4" value="Font">
+                                    <input type="checkbox"  name="type" value="Font">
                                     <label for="type4"> Font</label><br><br><br><br><br>
                                 </div>
-                                <input type="submit" id="chart_2_submit" value="Submit">
+                                <div class="dropdown">
+                                <input  class="dropbtn" type="submit" id="chart_2_submit" style value="Submit">
+                                </div>
                             </form>
                         </div>
-
-
-
-                <button class="dropbtn">Modify chart</button>
-                <div class="dropdown-content">
-                    <a id="pie_image">Image</a>
-                    <a id="pie_application_javascript">Javascript</a>
-                    <a id="pie_font">Font</a>
-                    <a id="pie_reset">Reset</a>
-                </div>
-            </div>    
+ 
+            <hr>
+                        
+            <div class="chart-container" >
             
-
-            <div class="chart-container" >
-            <h3 style="text-align: center; margin-top: 30px;">RESPONSE TIME ANALYSIS (ms)</h3>
             <canvas id="myChart2"></canvas>
-            <div class="dropdown">
-
-                <button class="dropbtn">Modify chart</button>
-                <div class="dropdown-content">
-                    <a id="bar_image">Image</a>
-                    <a id="bar_application_javascript">Javascript</a>
-                    <a id="bar_font">Font</a>
-                    <a id="bar_reset">Reset</a>
-                </div>
-            </div>  
-            </div>
 
             <div class="chart-container" >
-                <h3 style="text-align: center; margin-top: 30px;">TTL</h3>
+                <h3 style="text-align: center; margin: 50px;">TTL</h3>
                 <canvas id="Chart_TTL"></canvas>
-                <h4>TTL Filter</h4>
+                <h4 style="margin-top: 30px;">TTL Filter</h4>
                 <label class="container">All
                 <input type="checkbox" id="ttl_all">
                 <span class="checkmark"></span>
@@ -239,9 +222,9 @@
             </div>
 
 
+                <hr>
 
-
-                        <h3 style="text-align: center; margin-top: 30px;">IP'S MAP</h3>
+                        <h3 style="text-align: center; margin-top: 100px;">IP'S MAP</h3>
                         <p style="text-align: center;">Location of IP's clients send HTTP requests</p>
                         <div id="mapid" style="height: 500px; width:auto; margin-top: 30px;"></div>
 

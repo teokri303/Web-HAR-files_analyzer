@@ -7,7 +7,7 @@
     <script src="/index.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-     
+        <link href="/style.css" rel="stylesheet" type="text/css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -43,32 +43,28 @@
 
             <h1 style="text-align: center; margin-top: 100px;">Here you can upload - filter - your local HAR Files</h1>
 
-            <div style="text-align: center" class="input-group">
+            <div style="text-align: center; width:auto;"  class="input-group">
                 <form action="" method="POST">
                     <input type="file" class="form-control" id="har_file" name="har_file" accept=".json,.har"
                         aria-describedby="inputGroupFileAddon04" aria-label="Upload">
 
             </div>
-
+            <div class="button_selection">
             <div class="div_submit">
 
-                <button class="btn btn-outline-secondary" style="text-align: center; margin-top: 100px; " type="submit"
+                <button class="btn btn-outline-secondary" style="text-align: center; display:block"  type="submit"
                     id="filter_btn">FILTER</button>
 
-                <button class="btn btn-outline-secondary" style="text-align: center; margin-top: 100px; display: none;" type="submit"
+                <button class="btn btn-outline-secondary" style="text-align: center; margin: 10px; display: none;" type="submit"
                     id="submit_har">SUMBIT</button>
             </div> 
             <div class="local_download">     
-                <button class="btn btn-outline-secondary" style="text-align: center; margin-top: 100px; display: none;" type="submit"
+                <button class="btn btn-outline-secondary" style="text-align: center; display: none;" type="submit"
                     id="save_local_button">Save local</button>
 
             </div>
             <div class="div_buttons" id="div_buttons"></div>
-            <h1 style="text-align: center; margin-top: 100px;">HAR Preview</h1>
-            <div style="text-align: center" class="input-group">
-                <p id="har_Preview"></p>>
             </div>
-
 
 
 
@@ -116,25 +112,11 @@
     const har_submit = document.getElementById('submit_har');
     har_submit.addEventListener('click', (event) => {
         submit_file();
-        /*
-        var btn = document.createElement("BUTTON");
-        btn.innerHTML = "CLICK ME";  
-        */                 
-        //document.body
-        //document.getElementById('div_buttons').appendChild(btn);
-        //console.log(window.har_file);
+        
         event.preventDefault();
     });
 
-    //const filePreview = document.getElementById('har_Preview');
-    /*
-    //PREVIEW
-    har_submit.addEventListener('change', (event) => {
-        //filePreview.innerHTML = window.har_file;
-        console.log(window.har_file);
-    });
-    return false;
-    */
+    
     // SUBMIT HAR FILE    
     async function submit_file() {
         //USER DATA FOR 

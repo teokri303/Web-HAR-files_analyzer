@@ -309,19 +309,6 @@ $(document).ready(function () {
 
 
 
-//NO USE
-function addData(chart, data) {
-  //chart.data.labels.push(label);
-  chart.data.datasets.forEach((dataset) => {
-    dataset.data.pop();
-  });
-  chart.data.datasets.forEach((dataset) => {
-    dataset.data.push(data);
-  });
-  chart.update();
-}
-
-
 //AVERAGE AGE OF WEB OBJECT PER CONTENT TYPE
 $(document).ready(function () {
 
@@ -331,9 +318,7 @@ $(document).ready(function () {
   ageOfElements_image();
   ageOfElements_text();
 
-  chartInfo();
   waitForElement();
-  //chartTTL();
   function waitForElement(){
     if(typeof window.all_age !== "undefined"){
       var dataset = []
@@ -352,12 +337,11 @@ $(document).ready(function () {
 })
 
 
-function chartInfo() {
+function chartInfo() { 
   $.ajax({
     type: "GET",
     url: "/admin/info/chart/info",
     success: function (result) {
-      //console.log(result)
       var xLabels = []
       var dataset = []
       var backgroundColor = ['rgb(255, 99, 132)', 'rgb(154, 205, 50)']
@@ -411,21 +395,9 @@ function chartInfo() {
 
 
 function chartTTL(data,label,backgroundColor) {
-      /*
-      var xLabels = []
-      var dataset = []
-      for (var i =0; i< data.length; i++){
-        dataset.push(data)
-        xLabels.push(label)
-        
-      }
-      */
+  
       console.log("dataset:" + data)
       console.log("xlabels" + label)
-     //var xLabels = []
-     //xLabels.push(label)
-     //var dataset = []
-     //dataset.push(data);
       var ctx_bar = document.getElementById('Chart_TTL').getContext('2d');
       ctx_bar.canvas.width = 500;
       ctx_bar.canvas.height = 350;
@@ -472,14 +444,12 @@ function chartTTL(data,label,backgroundColor) {
 
 function avg_time(result){
   for (var i = 0; i < result.length; i++) {
-    //console.log("Result" + i +"before: " + result[i].cache_control);
     if (result[i].cache_control.indexOf(',') == -1 || result[i].cache_control.indexOf(',') > 5) {
       result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf('=') + 10);
       //console.log("Result" + i +"after: " + result[i].cache_control);
     }
     if ((result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('='))) > 0) {
       result[i].cache_control = result[i].cache_control.substring(result[i].cache_control.indexOf('=') + 1, result[i].cache_control.indexOf(',', result[i].cache_control.indexOf('=')));
-      //console.log("Result" + i +"after: " + result[i].cache_control);
     }
 
   }
@@ -632,14 +602,6 @@ function isChecked(){
 }
 
 
-/*
-'rgb(50, 205, 102)',
-          'rgb(50, 153, 205)',
-          'rgb(205, 50, 153)',
-          'rgb(205, 102, 50)'
-*/
-
-
 
 
 
@@ -648,31 +610,181 @@ function isChecked(){
 $(document).ready(function () {
   chartInfo();
   
-
-
-  //EDW EINAI TO HANDLER GIA TO SUMBIT TWN CKECKBOXES POY FERNEI MESA OLES TIS TIMES SOY TA BGAZEI OLA STIN CONSOLA AUTA POY PAIRNEIS KAI EXEIS NA DIAXEIRISTEIS DEN KSERO AN PREPEI NA EINAI EDW H NA EINAI MESA STO CHART INFO APO KATW EPISIS RPEPEI PRWTA NA TA LAMVANEI OLA MAZI TO CHART KAI META NA PARAMETROPOIEITE OPOTE PREPEI KAPVW NA ALLAKSOYN SEIRA TA FUNCTION
-  $('#chart_2_submit').on('click', function() {
+  $('#chart_2_submit').on('click', function(event) {
+    event.preventDefault();
     parameters = $('#chart_2_conf').serializeArray();
-    console.log(parameters);
+    //console.log(parameters);
+    //console.log(result);
+    chartConfig();
+    console.log(window.chart_data);
+    
+    var array = []
+    var array2 = []
+    var array3 = []
+    for(var i=0; i<parameters.length; i++ ){
+      if(parameters[i].name == "method"){
+        for (j = 0; j< window.chart_data.length; j++){
+         if (window.chart_data[j].method === parameters[i].value){
+         array.push(window.chart_data[j]);
+        }
+      }
+        
+      }
+    }
+    
+    if(array.length>0){
+      window.chart_data = array;
+    }
+    
+    
+
+    for(var i=0; i<parameters.length; i++ ){
+      if(parameters[i].name == "day"){
+        for (j = 0; j< window.chart_data.length; j++){
+         if (window.chart_data[j].day === parseInt(parameters[i].value)){
+         array2.push(window.chart_data[j]);
+        }
+      } 
+      }
+    }
+    if(array2.length>0){
+      window.chart_data = array2;
+    }
+    
+    
+
   
-    return false; // Prevent the submition of the form
+    for(var i=0; i<parameters.length; i++ ){
+      if(parameters[i].name == "type"){
+        for (j = 0; j< window.chart_data.length; j++){
+         
+         if ((window.chart_data[j].content_type.indexOf('image') !=-1 && parameters[i].value.indexOf('Image') !=-1 ) === true){
+         array3.push(window.chart_data[j]);
+        }
+        if ((chart_data[j].content_type.indexOf('application') !=-1 && parameters[i].value.indexOf('Application') !=-1 ) === true){
+          array3.push(window.chart_data[j]);
+         }
+         if ((chart_data[j].content_type.indexOf('font') !=-1 && parameters[i].value.indexOf('Font') !=-1 ) === true){
+          array3.push(window.chart_data[j]);
+         }
+         if ((chart_data[j].content_type.indexOf('text') !=-1 && parameters[i].value.indexOf('Text') !=-1 ) === true){
+          array3.push(window.chart_data[j]);
+         }
+      } 
+      }
+    }
+  
+
+    
+    if(array3.length>0){
+      window.chart_data = array3;
+    }
+    console.log("telikooo" + window.chart_data)
+    analyze(window.chart_data)
+    
   });
 
-
   function chartInfo() {
-    $.ajax({
+       $.ajax({
       type: "GET",
       url: "/admin/info/chart/info",
       success: function (result) {
         console.log(result)
-        var xLabels = []
-        var dataset = []
-        for (var i =0; i< result.length; i++){
-          dataset.push(result[i].avg)
-          xLabels.push(result[i].date_part + ":00")
-          
-        }
+        analyze(result)
+        window.chart_data = result;
+
       }
     })
   }
-})  
+
+  function chartConfig() {
+    $.ajax({
+   type: "GET",
+   url: "/admin/info/chart/info",
+   success: function (result) {
+    window.chart_data = result;
+   }
+ })
+}
+
+  function analyze(result){
+        console.log(result);
+        var xLabels = []
+        var dataset = []
+        for (var i =0; i< result.length; i++){
+          if (xLabels.includes(result[i].time) === false){
+            xLabels.push(result[i].time /*+ ":00"*/)
+          }
+        }
+        //console.log(xLabels)
+        for (var i =0; i< xLabels.length; i++){
+          var avg_time = 0;
+          var count = 0;
+
+          for (var j =0; j< result.length; j++){   //eisagwgh twn xlabels kai ypologismos twn AVG
+            if(result[j].time === xLabels[i]){
+              avg_time = avg_time + parseInt(result[j].timings)
+              count = count +1
+            }
+          }
+          dataset.push(avg_time/count)
+        }
+        //console.log(dataset)
+
+        for (var i =0; i< xLabels.length; i++){      //metatroph se upo wras
+          xLabels[i] = xLabels[i].toString() + ":00"
+        }
+       //return (xLabels,datasets);
+       console.log(dataset);
+       if(window.chart_timings != undefined){
+       window.chart_timings.destroy();
+       }
+      CharTimings(xLabels,dataset);
+      }
+
+      function CharTimings(xLabels, dataset){
+
+        var ctx_bar = document.getElementById('myChart2_configurations').getContext('2d');
+        ctx_bar.canvas.width = 500;
+        ctx_bar.canvas.height = 350;
+        window.chart_timings = new Chart(ctx_bar, {
+          // The type of chart we want to create
+          type: 'bar',
+      
+          // The data for our dataset
+          data: {
+            labels: xLabels,
+            datasets: [{
+              label: 'Timings',
+              backgroundColor: 'rgb(255, 99, 132)',
+              borderColor: 'rgb(255, 99, 132)',
+              data: dataset
+            }],
+          },
+          options:{
+            responsive:false,
+            legend:{display:false},
+            scales: {
+              xAxes: [{
+                  gridLines: {
+                      display:false,
+                  }
+              },
+            ],
+              yAxes: [{
+                  gridLines: {
+                      display:false,
+                  },
+                  ticks:{
+                    min:0
+                  }   
+              }]
+          }
+          }
+        });
+      }
+        
+      
+      
+})
+
