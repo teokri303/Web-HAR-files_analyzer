@@ -77,53 +77,44 @@ app.get('/home/profile', (req, res) => {
       }
   });
 });
-
-//ADMIN PAGE ANALYTICS 
-app.get('/login/admin', async (req, res) => {
-  //REGISTERED USERS
-  pool.query("SELECT COUNT(*) FROM users", function (err, count) {
-    if (err)
-      throw err;
-    else {
-      users_number = count.rows[0].count;
-    }
-  });
-  //RESPONSE STATUS COUNT
-  pool.query("SELECT status, COUNT(*) FROM response GROUP BY status", function (err, status) {
-    if (err)
-      throw err;
-    else {
-      responseStatus = status.rows;
-      //console.log(parseInt(responseStatus[0].status))
-      //console.log(responseStatus)
-    }
-  });
-  //SELECT NUMBER OF INTERNET PROVIDERS
-  pool.query("SELECT COUNT(DISTINCT host) AS count FROM har_files", function (err, host) {
-    if (err)
-      throw err;
-    else {
-      host_count = host.rows;
-      //console.log(host_count)
-      
-    }
-  });
-  //METHODS STATUS COUNT
-  pool.query("SELECT method, COUNT(*) FROM request GROUP BY method", function (err, get_method) {
-    if (err)
-      throw err;
-    else {
-      methods = get_method.rows;
-      //console.log(methods)
-
-      res.render('admin', { users_number, methods, responseStatus, host_count});
-      res.end();
-    }
-  });
-
-
-
+app.get('/login/admin',(req, res) => {
+  res.render('admin')
 });
+
+//REGISTERED USERS COUNT ADMIN
+app.get('/admin/info/users/count',(req, res) => {
+  pool.query("SELECT COUNT(*) FROM users",(err, result) =>{
+    if (err) throw err;
+    res.send(result.rows[0].count)
+    
+  });
+});
+//INTERNET PROVIDERS COUNT ADMIN
+app.get('/admin/info/providers/count',(req, res) => {
+  pool.query("SELECT COUNT(DISTINCT host) AS count FROM har_files",(err, result) => {
+    if (err) throw err;
+    //console.log(result.rows[0].count)
+    res.send(result.rows[0].count)
+  });
+});
+//METHODS STATUS COUNT ADMIN
+app.get('/admin/info/methods/count',(req, res) => {
+  pool.query("SELECT method, COUNT(*) FROM request GROUP BY method",(err, result) => {
+    if (err) throw err;
+    //console.log(result.rows)
+    res.send(result.rows)
+  });
+});
+//RESPONSE STATUS COUNT ADMIN
+app.get('/admin/info/response/count',(req, res) => {
+  pool.query("SELECT status, COUNT(*) FROM response GROUP BY status",(err, result) => {
+    if (err) throw err;
+    //console.log(result.rows)
+    res.send(result.rows)
+  });
+});
+
+
 
 
 //registration handler
@@ -504,7 +495,7 @@ app.get("/admin/map/server", (req, res) => {
 })
 //ADMIN MAP INFORMATION 3
 app.get("/admin/map/lines", (req, res) => {
-  pool.query(`SELECT DISTINCT entries.serverlat, entries.serverlong, har_files.geolat, har_files.geolong, users.user_id
+  pool.query(`SELECT entries.serverlat, entries.serverlong, har_files.geolat, har_files.geolong, users.user_id
               FROM ((entries
               INNER JOIN har_files ON har_files.har_id = entries.har_id)
               INNER JOIN users ON users.user_id = har_files.user_id) WHERE (entries.serverlat, entries.serverlong, har_files.geolat, har_files.geolong) IS NOT NULL; `, (err, results, fields) => {

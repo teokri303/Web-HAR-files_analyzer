@@ -29,133 +29,120 @@
             <%= messages.success %>
         </div>
         <% } %>
-        <div class="main_content">
-            <h1 style="text-align: center; margin: 50px;">This is the admin page analytics</h1>
-            <table class="table">
-                <thead style="text-align: center;">
-                    <tr>
-                        <th scope="col" ">AMOUNT OF REGISTERED USERS</th>
+            <div class="main_content">
+                <h1 style="text-align: center; margin: 50px;">This is the admin page analytics</h1>
+                <table class="table">
+                    <thead style="text-align: center;">
+                        <tr>
+                            <th scope="col" ">AMOUNT OF REGISTERED USERS</th>
                         <th scope=" col" ">AMOUNT OF INTERNET PROVIDERS</th>
                         <th scope=" col" ">UNIQUE DOMAINS ON DATABASE</th>
                     </tr>
                 </thead>
                 <tbody style=" text-align: center;">
-                    <tr>
-                        <td>
-                            <%= users_number%>
-                        </td>
-                        <td>
-                            <%= host_count[0].count%>
-                        </td>
-                        <td id="domains_col">
-                        </td>
-                    </tr>
+                        <tr>
+                            <td id="user_count">
+                            </td>
+                            <td id="host_count">
+                            </td>
+                            <td id="domains_col">
+                            </td>
+                        </tr>
+                        </tbody>
+                </table>
+
+                <h3 style="text-align: center; margin-top: 30px;">Amount of request methods</h3>
+
+                <table class="table">
+                    <thead>
+                        <tr id="methods_head" style="text-align: center;">           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="methods_body" style="text-align: center;">                           
+                        </tr>
+
                     </tbody>
-            </table>
+                </table>
 
-            <h3 style="text-align: center; margin-top: 30px;">Amount of request methods</h3>
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <% for(var i=0; i < methods.length; i++) { %>
+                <h3 style="text-align: center; margin-top: 30px;">Response status count</h3>
+                <table class="table">
+                    <thead>
+                        <tr id="response_status_head" style="text-align: center;">
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        <tr id="response_status_body" style="text-align: center;">
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 style="text-align: center; margin-top: 30px;">Average age of web objects per Content Type </h3>
+
+                <table class="table">
+                    <thead>
+                        <tr>
                             <th scope="col" style="text-align: center;">
-                                <%= methods[i].method %>
+                                ALL Types
                             </th>
-                            <% } %>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <% for(var i=0; i < methods.length; i++) { %>
-                            <td style="text-align: center;">
-                                <%= methods[i].count %>
-                            </td>
-                            <% } %>
-                    </tr>
-
-                </tbody>
-            </table>
-
-
-            <h3 style="text-align: center; margin-top: 30px;">Response status count</h3>
-            <table class="table">
-                <thead>
-
-                    <tr>
-                        <% for(var i=0; i < responseStatus.length; i++) { %>
                             <th scope="col" style="text-align: center;">
-                                <%= responseStatus[i].status %>
+                                Application
                             </th>
-                            <% } %>
-                    </tr>
+                            <th scope="col" style="text-align: center;">
+                                Image
+                            </th>
+                            <th scope="col" style="text-align: center;">
+                                Text
+                            </th>
 
-                </thead>
-                <tbody>
-                <tbody>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="timing_table">
 
-                    <tr>
-                        <% for(var i=0; i < responseStatus.length; i++) { %>
-                            <td style="text-align: center;">
-                                <%= responseStatus[i].count %>
+                            <td style="text-align: center;" id="avg_all">
                             </td>
-                            <% } %>
-                    </tr>
+                            <td style="text-align: center;" id="avg_app">
+                            </td>
+                            <td style="text-align: center;" id="avg_image">
+                            </td>
+                            <td style="text-align: center;" id="avg_text">
+                            </td>
 
-                </tbody>
+                        </tr>
 
-                </tbody>
-            </table>
-
-            <h3 style="text-align: center; margin-top: 30px;">Average age of web objects per Content Type </h3>
-
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col" style="text-align: center;">
-                            ALL Types
-                        </th>
-                        <th scope="col" style="text-align: center;">
-                            Application
-                        </th>
-                        <th scope="col" style="text-align: center;">
-                            Image
-                        </th>
-                        <th scope="col" style="text-align: center;">
-                            Text
-                        </th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr id="timing_table">
-
-                        <td style="text-align: center;" id="avg_all">
-                        </td>
-                        <td style="text-align: center;" id="avg_app">
-                        </td>
-                        <td style="text-align: center;" id="avg_image">
-                        </td>
-                        <td style="text-align: center;" id="avg_text">
-                        </td>
-
-                    </tr>
-
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
 
 
-           
-            
-            
-            
-            
-            <div class="header_analysis">
-            <h2 style="text-align: center; margin-top: 30px;">HTTP Headers Analysis</h3>
-            <h3 style="text-align: center; margin-top: 15px;">Percentage of cachebility directives</h3>
-            <canvas id="myChart"  style="margin-top: 50px; margin-bottom: 50px; "></canvas>
 
-            <div class="dropdown">
+
+
+
+
+                <div class="header_analysis">
+                    <h2 style="text-align: center; margin-top: 30px;">HTTP Headers Analysis</h3>
+                        <h3 style="text-align: center; margin-top: 15px;">Percentage of cachebility directives</h3>
+                        <canvas id="myChart" style="margin-top: 50px; margin-bottom: 50px; "></canvas>
+
+                        <div class="dropdown">
+
+                            <button class="dropbtn">Modify chart</button>
+                            <div class="dropdown-content">
+                                <a id="link1">Image</a>
+                                <a id="application_javascript">Javascript</a>
+                                <a id="font">Font</a>
+                                <a id="reset">Reset</a>
+                            </div>
+                        </div>
+
+
+                        <div class="chart-container">
+                            <h3 style="text-align: center; margin-top: 30px;">RESPONSE TIME ANALYSIS (ms)</h3>
+                            <canvas id="myChart2"></canvas>
+                        </div>
 
                 <button class="dropbtn">Modify chart</button>
                 <div class="dropdown-content">
@@ -206,12 +193,19 @@
             </div>
 
 
-            
-            <h3 style="text-align: center; margin-top: 30px;">IP'S MAP</h3>
-            <p style="text-align: center;">Location of IP's clients send HTTP requests</p>
-            <div id="mapid" style="height: 500px; width:auto; margin-top: 30px;"></div>
-            
-        </div>
+
+                        <h3 style="text-align: center; margin-top: 30px;">IP'S MAP</h3>
+                        <p style="text-align: center;">Location of IP's clients send HTTP requests</p>
+                        <div id="mapid" style="height: 500px; width:auto; margin-top: 30px;"></div>
+
+                        <div  style="text-align: left; margin-bottom: 40px;">
+                            <ul>
+                                <li>Bolder the line -> Frequentlier requested </li>
+                                <li>Thinner the line -> Less often requested</li>
+                            </ul>
+                        </div>
+
+                </div>
 
 
 
